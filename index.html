@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FlameSpec — EU Declaration of Conformity
-</title>
+<title>FlameSpec — EU Declaration of Conformity</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -92,7 +91,7 @@
   .directive-block { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; page-break-inside: avoid; break-inside: avoid; }
   .directive-header { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); }
   .directive-header-left { display: flex; align-items: center; gap: 12px; }
-  .directive-header-name { font-size: 12px; font-weight: 600; text-transform: uppercase; }
+  .directive-header-name { font-size: 13px; font-weight: 600; }
   .directive-header-ref { font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin-left: 6px; }
   .directive-mark-img { height: 32px; width: auto; background: white; padding: 2px; border-radius: 4px; }
   .directive-badge { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; }
@@ -103,7 +102,7 @@
   .badge-cpr  { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid #4c1d95; }
 
   .directive-body { padding: 14px 16px; }
-  .field-row { display: grid; grid-template-columns: 200px 1fr; gap: 8px 16px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .field-row { display: grid; grid-template-columns: 240px 1fr; gap: 8px 16px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
   .field-row:last-child { border-bottom: none; }
   .field-key { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; padding-top: 2px; }
   .field-val { font-size: 13px; color: var(--text); font-family: var(--mono); white-space: pre-wrap; }
@@ -212,7 +211,6 @@
 // SHARED DIRECTIVE BUILDING BLOCKS
 // ─────────────────────────────────────────────
 
-// FIX #3: ref added to ATEX_COMMON so it appears in the directive header
 const ATEX_COMMON = {
   ref: "2014/34/EU",
   typeExamBody: "ICQC LTD, 63-19 Skolas Street, Jurmala, LV-2016 Latvia",
@@ -250,20 +248,24 @@ IMO MSC.1/Circ.1242`,
 };
 const MED_COMMON = null; // ← change to MED_DATA to enable Marine directive
 
+// ─────────────────────────────────────────────
+// NEW CPR HELPERS 
+// ─────────────────────────────────────────────
 const CPR_EMI = (certNo) => ({
   ref: "305/2011/EU",
   notifiedBody: "ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft., Hungary",
   notifiedBodyNo: "1415",
-  certNo: certNo + "-(C-17-2025)",
-  standard: "EN 54-10:2002/A1:2005"
+  cprCertNo: certNo + "-(C-17-2025)",
+  standard: "EN 54-10:2002 + A1:2005"
 });
 
-const CPR_VDS = (nbNo, certNo) => ({
+const CPR_VDS = (cprCertNo, vdsCertNo) => ({
   ref: "305/2011/EU",
   notifiedBody: "VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln",
-  notifiedBodyNo: nbNo,
-  certNo,
-  standard: "EN 54-10:2002+A1:2005" //VdS 2543:2021-03
+  notifiedBodyNo: "0786",
+  cprCertNo: cprCertNo + " (See separate certificate)",
+  vdsCertNo: vdsCertNo,
+  standard: "EN 54-10:2002 + A1:2005"
 });
 
 const atex = (certNo) => ({ ...ATEX_COMMON, certNo });
@@ -305,6 +307,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X120V0023.00", modelNo: "FLS-IR3-ASnX", equipment: "FlameSpec IR3 Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), MED: MED_COMMON, EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
@@ -325,6 +328,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), MED: MED_COMMON, EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+      --------------------------- */
   },
 
   // ── FLS-IR3-HD ───────────────────────────
@@ -374,6 +378,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
      "ASn0": {
       docNo: "X101V0023.00", modelNo: "FLS-IR3-HD-ASnX", equipment: "FlameSpec IR3-HD Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), MED: MED_COMMON, EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
@@ -409,6 +414,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), MED: MED_COMMON, EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+    --------------------------- */
   },
 
   // ── FLS-IR3-H2 ───────────────────────────
@@ -438,6 +444,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
      "ASn0": {
       docNo: "X150V0023.00", modelNo: "FLS-IR3-H2-ASnX", equipment: "FlameSpec IR3-H2 Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON },
@@ -458,6 +465,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+      --------------------------- */
   },
 
   // ── FLS-IR3-H2-HD ────────────────────────
@@ -497,6 +505,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-140") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X140V0023.00", modelNo: "FLS-IR3-H2-HD-ASnX", equipment: "FlameSpec IR3-H2-HD Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON },
@@ -527,6 +536,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+    --------------------------- */
   },
 
   // ── FLS-UV-IR ────────────────────────────
@@ -556,6 +566,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X110V0023.00", modelNo: "FLS-UV-IR-ASnX", equipment: "FlameSpec UV-IR Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-141") },
@@ -571,6 +582,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-141") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+    */
   },
 
   // ── FLS-UV-IR-F ──────────────────────────
@@ -595,6 +607,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X160V0023.00", modelNo: "FLS-UV-IR-F-ASnX", equipment: "FlameSpec UV-IR-F Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
@@ -605,11 +618,17 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    "ASn2": {
+      docNo: "X160V0023.00", modelNo: "FLS-UV-IR-F-ASnX", equipment: "FlameSpec UV-IR-F Flame Detector",
+      directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
+      signatory: "Jeremy Zhou", date: "28/04/2026"
+    },
     "ASn5": {
       docNo: "X160V0023.00", modelNo: "FLS-UV-IR-F-ASnX", equipment: "FlameSpec UV-IR-F Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0424 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+    */
   },
 
   // ── FLS-UV-IR-HD ─────────────────────────
@@ -644,6 +663,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X130V0023.03", modelNo: "FLS-UV-IR-HD-ASnX", equipment: "FlameSpec UV-IR-HD Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-141") },
@@ -664,6 +684,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-141") },
       signatory: "Jeremy Zhou", date: "02/02/2026"
     }
+    */
   },
 
   // ── FLS-UV-IR-F-HD ───────────────────────
@@ -693,6 +714,7 @@ const DOC_DB = {
       directives: { EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     },
+    /* ---- HIDDEN VARIANTS ----
     "ASn0": {
       docNo: "X170V0023.00", modelNo: "FLS-UV-IR-F-HD-ASnX", equipment: "FlameSpec UV-IR-F-HD Flame Detector",
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
@@ -713,6 +735,7 @@ const DOC_DB = {
       directives: { ATEX: atex("ICQC 19 ATEX 0423 X"), EMC: EMC_COMMON, CPR: CPR_EMI("1415-CPR-142") },
       signatory: "Jeremy Zhou", date: "28/04/2026"
     }
+    */
   }
 };
 
@@ -720,15 +743,16 @@ const DOC_DB = {
 // UI LOGIC
 // ─────────────────────────────────────────────
 
+// ASn variants removed from the dropdown list so they are invisible to the user
 const VARIANTS_BY_MODEL = {
-  "FLS-IR3":        ["ASx0","ASx1-VdS","ASx3","ASx5","CSx0","CSxE","ASn0","ASn1-VdS","ASn3","ASn5"],
-  "FLS-IR3-HD":     ["ASx0","ASx1","ASx2","ASx3","ASx4","ASx5","ASx7","CSx0","CSxE","ASn0","ASn1","ASn2","ASn3","ASn4","ASn5","ASn7"],
-  "FLS-IR3-H2":     ["ASx0","ASx1","ASx3-VdS","ASx5","CSx0","ASn0","ASn1","ASn3-VdS","ASn5"],
-  "FLS-IR3-H2-HD":  ["ASx0","ASx1","ASx2","ASx3","ASx4","ASx5","CSx0","ASn0","ASn1","ASn2","ASn3","ASn4","ASn5"],
-  "FLS-UV-IR":      ["ASx0","ASx1-VdS","ASx5","CSx0","CSxE","ASn0","ASn1-VdS","ASn5"],
-  "FLS-UV-IR-F":    ["ASx0","ASx1","ASx5","CSx0","ASn0","ASn1","ASn5"],
-  "FLS-UV-IR-HD":   ["ASx0","ASx1","ASx2","ASx5","CSx0","CSxE","ASn0","ASn1","ASn2","ASn5"],
-  "FLS-UV-IR-F-HD": ["ASx0","ASx1","ASx2","ASx5","CSx0","ASn0","ASn1","ASn2","ASn5"]
+  "FLS-IR3":        ["ASx0","ASx1-VdS","ASx3","ASx5","CSx0","CSxE"], 
+  "FLS-IR3-HD":     ["ASx0","ASx1","ASx2","ASx3","ASx4","ASx5","ASx7","CSx0","CSxE"], 
+  "FLS-IR3-H2":     ["ASx0","ASx1","ASx3-VdS","ASx5","CSx0"], 
+  "FLS-IR3-H2-HD":  ["ASx0","ASx1","ASx2","ASx3","ASx4","ASx5","CSx0"], 
+  "FLS-UV-IR":      ["ASx0","ASx1-VdS","ASx5","CSx0","CSxE"], 
+  "FLS-UV-IR-F":    ["ASx0","ASx1","ASx5","CSx0"], 
+  "FLS-UV-IR-HD":   ["ASx0","ASx1","ASx2","ASx5","CSx0","CSxE"], 
+  "FLS-UV-IR-F-HD": ["ASx0","ASx1","ASx2","ASx5","CSx0"] 
 };
 
 function cleanVdsLabel(value) {
@@ -784,14 +808,16 @@ const FIELD_LABELS = {
   typeExamBodyNo:  'Type Exam Body No.',
   qaBody:          'QA Body',
   qaBodyNo:        'QA Body No.',
-  certNo:          'Certificate No.',
+  certNo:          'EC Certificate No.',
+  cprCertNo:       'Certificate of constancy of performance',
+  vdsCertNo:       'VdS certificate no.',
   markings:        'Markings',
   standards:       'Standards',
   body:            'Approval Body',
   bodyNo:          'Body No.',
-  notifiedBody:    'Notified Body',
-  notifiedBodyNo:  'Notified Body No.',
-  standard:        'Harmonized Standard'
+  notifiedBody:    'Notified body',
+  notifiedBodyNo:  'Notified body identification no.',
+  standard:        'Harmonised standard'
 };
 
 const BADGE_CLASS = { ATEX: 'badge-atex', MED: 'badge-med', EMC: 'badge-emc', CPR: 'badge-cpr' };
@@ -821,6 +847,9 @@ function renderDoc(doc, variant) {
     const icon = DIRECTIVE_ICON[key] || '';
     const badge = BADGE_CLASS[key] || 'badge-emc';
 
+    // FIX: Set the exact name for the CPR Directive
+    const dirName = key === 'CPR' ? 'Construction Products Regulation (CPR)' : `${key} Directive`;
+
     // Build body rows — skip 'ref' (already in header)
     let bodyHtml = '';
     Object.entries(d).forEach(([prop, value]) => {
@@ -838,7 +867,7 @@ function renderDoc(doc, variant) {
       <div class="directive-header">
         <div class="directive-header-left">
           ${icon}
-          <span class="directive-header-name">${escapeHtml(key)} Directive</span>
+          <span class="directive-header-name">${escapeHtml(dirName)}</span>
           ${refSpan}
         </div>
         <span class="directive-badge ${badge}">${escapeHtml(key)}</span>
