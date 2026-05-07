@@ -764,7 +764,7 @@ function normalizeVariantDisplay(variant) {
 }
 
 function normalizeModelDisplay(modelNo) {
-  return cleanVdsLabel(modelNo).replace(/-AS[Xx]\d+/, '-ASxX');
+  return cleanVdsLabel(modelNo).replace(/-(AS|CS).*$/i, '').trim();
 }
 
 function onModelChange() {
