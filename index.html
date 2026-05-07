@@ -88,7 +88,16 @@
 
   /* ── Directives ── */
   .directives-grid { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-  .directive-block { border: 1px solid var(--border); border-radius: 8px; overflow: hidden; page-break-inside: avoid; break-inside: avoid; }
+  
+  /* FIX applied here to stop block breaking */
+  .directive-block { 
+    border: 1px solid var(--border); 
+    border-radius: 8px; 
+    overflow: hidden; 
+    page-break-inside: avoid; 
+    break-inside: avoid; 
+  }
+  
   .directive-header { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; background: var(--surface2); border-bottom: 1px solid var(--border); }
   .directive-header-left { display: flex; align-items: center; gap: 12px; }
   .directive-header-name { font-size: 13px; font-weight: 600; }
@@ -108,7 +117,19 @@
   .field-val { font-size: 13px; color: var(--text); font-family: var(--mono); white-space: pre-wrap; }
 
   /* ── Signatory ── */
-  .signatory-row { padding: 16px 24px; border-top: 1px solid var(--border); background: var(--surface2); display: flex; gap: 32px; align-items: center; flex-wrap: wrap; }
+  /* FIX applied here to stop block breaking */
+  .signatory-row { 
+    padding: 16px 24px; 
+    border-top: 1px solid var(--border); 
+    background: var(--surface2); 
+    display: flex; 
+    gap: 32px; 
+    align-items: center; 
+    flex-wrap: wrap; 
+    page-break-inside: avoid; 
+    break-inside: avoid;
+  }
+  
   .sig-field { display: flex; flex-direction: column; gap: 3px; }
   .sig-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; }
   .sig-val { font-family: var(--mono); font-size: 13px; color: var(--text); }
@@ -121,12 +142,17 @@
   .not-available { padding: 40px 24px; text-align: center; color: var(--text-muted); display: none; }
   .not-available.visible { display: block; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
 
+  /* ── PRINT FIXES ── */
   @media print {
     body { background: white; color: black; }
     header { background: white !important; border-bottom: 1px solid #ccc; }
     .selector-card, .empty-state, .not-available, .doc-actions { display: none !important; }
     .doc-panel { display: block !important; border: none; }
     .sig-img-container, .directive-mark-img { border: 1px solid #ccc; }
+    
+    /* Extra guarantee that blocks won't break across pages */
+    .directive-block { page-break-inside: avoid !important; break-inside: avoid !important; }
+    .signatory-row { page-break-inside: avoid !important; break-inside: avoid !important; }
   }
 </style>
 </head>
