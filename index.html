@@ -278,6 +278,8 @@ const MED_COMMON = null; // ← change to MED_DATA to enable Marine directive
 // ─────────────────────────────────────────────
 // NEW CPR HELPERS 
 // ─────────────────────────────────────────────
+
+/* --- HIDDEN EMI CPR BLOCK ---
 const CPR_EMI = (certNo) => ({
   ref: "305/2011/EU",
   notifiedBody: "ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft., Hungary",
@@ -285,6 +287,11 @@ const CPR_EMI = (certNo) => ({
   cprCertNo: certNo + "-(C-17-2025)",
   standard: "EN 54-10:2002 + A1:2005"
 });
+----------------------------- */
+
+// Currently disabled: Returns null so the CPR block does not render for EMI variants
+const CPR_EMI = (certNo) => null;
+
 
 /* --- HIDDEN VDS CPR BLOCK ---
 const CPR_VDS = (cprCertNo, vdsCertNo) => ({
