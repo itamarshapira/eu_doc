@@ -160,7 +160,7 @@
 
 <header>
   <div class="brand">
-    <img src="FGD Logo.svg" alt="FGD Logo" class="brand-logo-img">
+    <img src="FGD LOGO.svg" alt="FGD Logo" class="brand-logo-img">
   </div>
   <div>
     <div class="doc-number" id="doc-number"></div>
@@ -243,6 +243,7 @@ const ATEX_COMMON = {
   typeExamBodyNo: "CE2549",
   qaBody: "FM Approvals Europe Limited, Dublin, Ireland. D02 E440",
   qaBodyNo: "CE2809",
+  qancertno: "FM21ATEXQ0037",
   standards: `EN IEC 60079-0:2018+AC:2020-02
 EN 60079-1:2014+AC:2018-09
 EN IEC 60079-7:2015+A1:2018
@@ -285,6 +286,7 @@ const CPR_EMI = (certNo) => ({
   standard: "EN 54-10:2002 + A1:2005"
 });
 
+/* --- HIDDEN VDS CPR BLOCK ---
 const CPR_VDS = (cprCertNo, vdsCertNo) => ({
   ref: "305/2011/EU",
   notifiedBody: "VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln",
@@ -293,6 +295,10 @@ const CPR_VDS = (cprCertNo, vdsCertNo) => ({
   vdsCertNo: vdsCertNo,
   standard: "EN 54-10:2002 + A1:2005"
 });
+----------------------------- */
+
+// Currently disabled: Returns null so the CPR block does not render for VdS variants
+const CPR_VDS = (cprCertNo, vdsCertNo) => null;
 
 const atex = (certNo) => ({ ...ATEX_COMMON, certNo });
 
@@ -834,6 +840,7 @@ const FIELD_LABELS = {
   typeExamBodyNo:  'Type Exam Body No.',
   qaBody:          'QA Body',
   qaBodyNo:        'QA Body No.',
+  qancertno:       'QAN Certificate No.',
   certNo:          'EC Certificate No.',
   cprCertNo:       'Certificate of constancy of performance',
   vdsCertNo:       'VdS certificate no.',
@@ -848,8 +855,8 @@ const FIELD_LABELS = {
 
 const BADGE_CLASS = { ATEX: 'badge-atex', MED: 'badge-med', EMC: 'badge-emc', CPR: 'badge-cpr' };
 const DIRECTIVE_ICON = {
-  ATEX: `<img src="ATEX Logo.svg" class="directive-mark-img" alt="ATEX">`,
-  MED:  `<img src="DNV Logo.svg"  class="directive-mark-img" alt="MED">`
+  ATEX: `<img src="ATEX LOGO.svg" class="directive-mark-img" alt="ATEX">`,
+  MED:  `<img src="DNV LOGO.svg"  class="directive-mark-img" alt="MED">`
 };
 
 function renderDoc(doc, variant) {
