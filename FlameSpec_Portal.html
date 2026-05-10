@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FlameSpec — Document Portal</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+/* ═══════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════ */
+:root {
+  --bg:         #0b0e13;
+  --s1:         #111520;
+  --s2:         #181d28;
+  --s3:         #1e2535;
+  --border:     #252d3f;
+  --border2:    #2e3850;
+  --amber:      #f5a623;
+  --amber-d:    #b8731a;
+  --amber-glow: rgba(245,166,35,.13);
+  --blue:       #5b9cf6;
+  --blue-glow:  rgba(91,156,246,.12);
+  --green:      #3ecf8e;
+  --red:        #f56565;
+  --purple:     #b794f4;
+  --text:       #dde3ef;
+  --text-mid:   #8e99b0;
+  --text-dim:   #4f5c75;
+  --mono:       'DM Mono', monospace;
+  --sans:       'DM Sans', sans-serif;
+}
+*,*::before,*::after { box-sizing: border-box; margin:0; padding:0; }
+html { scroll-behavior: smooth; }
+body { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.6; min-height:100vh; }
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+.site-header {
+  position: sticky; top:0; z-index:200;
+  background: rgba(11,14,19,.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 20px;
+}
+.site-header .logo-wrap { display:flex; align-items:center; gap:12px; }
+.site-header .logo-wrap img { height:40px; width:auto; }
+.site-header .logo-text { font-family:var(--mono); font-size:13px; color:var(--amber); letter-spacing:.08em; font-weight:500; }
+.site-header .logo-sub  { font-size:10px; color:var(--text-dim); letter-spacing:.06em; text-transform:uppercase; margin-top:1px; }
+.header-docnum { font-family:var(--mono); font-size:13px; color:var(--amber); letter-spacing:.06em; opacity:0; transition:.3s; }
+.header-docnum.show { opacity:1; }
+.header-back {
+  display:none; align-items:center; gap:7px; cursor:pointer;
+  background:var(--s2); border:1px solid var(--border2);
+  border-radius:6px; padding:6px 14px; font-size:12px; color:var(--text-mid);
+  font-family:var(--sans); transition:.2s;
+}
+.header-back:hover { border-color:var(--amber); color:var(--amber); }
+.header-back.show { display:flex; }
+
+/* ═══════════════════════════════════════
+   VIEWS SYSTEM
+═══════════════════════════════════════ */
+.view { display:none; }
+.view.active { display:block; animation: vIn .3s ease both; }
+@keyframes vIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* ═══════════════════════════════════════
+   HOME VIEW
+═══════════════════════════════════════ */
+#view-home { max-width:900px; margin:0 auto; padding:48px 24px 64px; }
+
+.home-hero { text-align:center; margin-bottom:52px; }
+.home-hero h1 {
+  font-size:34px; font-weight:700; color:var(--text);
+  line-height:1.1; margin-bottom:14px;
+  letter-spacing:-.01em;
+}
+.home-hero h1 span { color:var(--amber); }
+.home-hero p { color:var(--text-mid); font-size:15px; max-width:540px; margin:0 auto; line-height:1.65; }
+
+/* Step wrapper */
+.sel-step { margin-bottom:40px; }
+.sel-step-label {
+  display:flex; align-items:center; gap:12px;
+  margin-bottom:18px;
+}
+.step-num {
+  width:26px; height:26px; border-radius:50%; background:var(--amber);
+  color:#000; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.step-num.done { background:var(--green); }
+.step-num.locked { background:var(--s3); color:var(--text-dim); }
+.sel-step-label span { font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-mid); }
+
+/* Model grid */
+.model-grid {
+  display:grid; grid-template-columns: repeat(4, 1fr); gap:10px;
+}
+.model-card {
+  background:var(--s2); border:1.5px solid var(--border); border-radius:8px;
+  padding:14px 12px; cursor:pointer; transition:.2s; text-align:center;
+  position:relative; overflow:hidden;
+}
+.model-card::before {
+  content:''; position:absolute; inset:0;
+  background: linear-gradient(135deg, var(--amber-glow), transparent);
+  opacity:0; transition:.2s;
+}
+.model-card:hover { border-color:var(--border2); transform:translateY(-1px); }
+.model-card:hover::before { opacity:1; }
+.model-card.selected { border-color:var(--amber) !important; background:var(--s3); }
+.model-card.selected .mc-name { color:var(--amber); }
+.mc-tag { font-family:var(--mono); font-size:9px; color:var(--text-dim); letter-spacing:.06em; text-transform:uppercase; margin-bottom:5px; }
+.mc-name { font-size:13px; font-weight:600; color:var(--text); line-height:1.3; font-family:var(--mono); }
+.mc-desc { font-size:10.5px; color:var(--text-dim); margin-top:4px; line-height:1.3; }
+
+/* Doc type cards */
+.doctype-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  opacity:.35; pointer-events:none; transition:.3s;
+}
+.doctype-row.enabled { opacity:1; pointer-events:all; }
+.doctype-card {
+  background:var(--s2); border:1.5px solid var(--border); border-radius:10px;
+  padding:22px 20px; cursor:pointer; transition:.2s; position:relative; overflow:hidden;
+}
+.doctype-card::after {
+  content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--amber), var(--amber-d));
+  transform:scaleX(0); transition:.3s; transform-origin:left;
+}
+.doctype-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
+.doctype-card:hover::after { transform:scaleX(1); }
+.doctype-card.selected { border-color:var(--amber); background:var(--s3); }
+.dc-icon { font-size:28px; margin-bottom:10px; }
+.dc-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:5px; }
+.dc-abbr { font-family:var(--mono); font-size:11px; color:var(--amber); margin-bottom:6px; }
+.dc-sub { font-size:12px; color:var(--text-dim); line-height:1.5; }
+
+/* Variant + rep selectors */
+.var-row {
+  display:grid; gap:14px; opacity:.35; pointer-events:none; transition:.3s;
+}
+.var-row.enabled { opacity:1; pointer-events:all; }
+.var-row.cols-2 { grid-template-columns:1fr 1fr; }
+.var-row.cols-1 { grid-template-columns:1fr; }
+.sel-group { display:flex; flex-direction:column; gap:7px; }
+.sel-group label { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--text-mid); }
+.sel-group select {
+  background:var(--s1); border:1.5px solid var(--border2); color:var(--text);
+  font-family:var(--mono); font-size:13px; padding:10px 36px 10px 14px; border-radius:7px;
+  appearance:none; cursor:pointer; outline:none; transition:.2s; width:100%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f5c75' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position: right 13px center;
+}
+.sel-group select:focus { border-color:var(--amber); box-shadow:0 0 0 3px var(--amber-glow); }
+.sel-group select:disabled { opacity:.35; cursor:not-allowed; }
+
+.view-btn {
+  display:none; margin-top:10px; width:100%;
+  background:var(--amber); border:none; border-radius:7px;
+  padding:13px 20px; font-family:var(--sans); font-weight:700;
+  font-size:14px; color:#000; cursor:pointer; transition:.2s;
+  letter-spacing:.02em;
+}
+.view-btn:hover { background:#fbbf24; transform:translateY(-1px); }
+.view-btn.show { display:block; }
+
+/* ═══════════════════════════════════════
+   DOCUMENT VIEW (shared shell)
+═══════════════════════════════════════ */
+#view-doc { max-width:960px; margin:0 auto; padding:28px 24px 64px; }
+.doc-actions { display:flex; justify-content:flex-end; margin-bottom:18px; }
+.btn-print {
+  display:flex; align-items:center; gap:8px;
+  padding:9px 20px; cursor:pointer; background:var(--s2); border:1px solid var(--border2);
+  border-radius:6px; font-weight:600; font-size:13px; color:var(--text-mid);
+  font-family:var(--sans); transition:.2s;
+}
+.btn-print:hover { border-color:var(--amber); color:var(--amber); }
+
+/* Doc header strip */
+.doc-banner {
+  background:var(--s2); border:1px solid var(--border); border-radius:10px;
+  padding:20px 24px; margin-bottom:20px;
+  display:flex; align-items:center; justify-content:space-between; gap:20px;
+}
+.doc-banner-left {}
+.doc-type-tag {
+  display:inline-block; font-family:var(--mono); font-size:10px; font-weight:500;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding:3px 9px; border-radius:4px; margin-bottom:8px;
+}
+.tag-doc { background:rgba(91,156,246,.15); color:var(--blue); border:1px solid rgba(91,156,246,.3); }
+.tag-dop { background:rgba(62,207,142,.12); color:var(--green); border:1px solid rgba(62,207,142,.28); }
+.doc-equip-name { font-size:20px; font-weight:700; color:var(--text); line-height:1.2; margin-bottom:5px; }
+.doc-model-line { font-family:var(--mono); font-size:13px; color:var(--amber); }
+
+/* ═══════════════════════════════════════
+   DOC SECTIONS (shared grid)
+═══════════════════════════════════════ */
+.sections-wrapper { display:flex; flex-direction:column; gap:14px; margin-bottom:16px; }
+.section-block { background:var(--s1); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+.section-hd {
+  background:var(--s2); border-bottom:1px solid var(--border);
+  padding:9px 16px; display:flex; align-items:center; gap:10px;
+}
+.section-hd-num { font-family:var(--mono); font-size:10px; color:var(--text-dim); }
+.section-hd-title { font-size:11px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:var(--text-mid); }
+.section-body { padding:14px 18px; font-size:13.5px; color:var(--text); line-height:1.65; }
+.section-body.mono { font-family:var(--mono); font-size:12.5px; white-space:pre-wrap; }
+.field-row { display:grid; grid-template-columns:220px 1fr; gap:8px 16px; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.04); }
+.field-row:last-child { border-bottom:none; }
+.fk { font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; }
+.fv { font-size:13px; color:var(--text); font-family:var(--mono); white-space:pre-wrap; word-break:break-word; }
+
+/* ── Performance Table ── */
+.perf-wrap { overflow-x:auto; border-radius:6px; border:1px solid var(--border); margin-top:2px; }
+table { width:100%; border-collapse:collapse; font-size:13px; text-align:left; }
+th { background:var(--s3); color:var(--text-mid); font-weight:600; font-size:11px; letter-spacing:.05em; text-transform:uppercase; padding:10px 14px; border-bottom:1px solid var(--border); }
+td { padding:10px 14px; border-bottom:1px solid rgba(255,255,255,.04); vertical-align:top; color:var(--text); line-height:1.45; }
+tr:last-child td { border-bottom:none; }
+tr:nth-child(even) td { background:rgba(255,255,255,.015); }
+
+/* ── Directive blocks (DoC) ── */
+.directive-block { background:var(--s1); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:14px; }
+.dir-hd { background:var(--s2); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; justify-content:space-between; }
+.dir-hd-left { display:flex; align-items:center; gap:10px; }
+.dir-hd-name { font-size:13px; font-weight:600; color:var(--text); }
+.dir-hd-ref { font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-left:4px; }
+.dir-mark img { height:30px; background:#fff; padding:2px 4px; border-radius:4px; }
+.dir-badge { font-size:10px; font-weight:700; padding:3px 9px; border-radius:4px; text-transform:uppercase; letter-spacing:.05em; }
+.badge-atex { background:rgba(245,166,35,.15); color:var(--amber); border:1px solid var(--amber-d); }
+.badge-med  { background:rgba(91,156,246,.12);  color:var(--blue);  border:1px solid rgba(91,156,246,.3); }
+.badge-emc  { background:rgba(62,207,142,.12);  color:var(--green); border:1px solid rgba(62,207,142,.28); }
+.badge-cpr  { background:rgba(183,148,244,.12); color:var(--purple); border:1px solid rgba(183,148,244,.28); }
+.dir-body { padding:12px 16px; }
+
+/* ── Signatory ── */
+.sig-block {
+  background:var(--s2); border:1px solid var(--border); border-radius:8px;
+  padding:20px 24px; display:flex; align-items:center; gap:32px; flex-wrap:wrap;
+}
+.sig-field { display:flex; flex-direction:column; gap:3px; }
+.sig-label { font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; font-weight:600; }
+.sig-val { font-family:var(--mono); font-size:13px; color:var(--text); }
+.sig-img-box { background:#fff; padding:8px 16px; border-radius:6px; display:flex; align-items:center; gap:10px; }
+.sig-img-box img { height:42px; width:auto; }
+.sig-img-box .sig-label { color:#666; }
+
+/* ═══════════════════════════════════════
+   PRINT
+═══════════════════════════════════════ */
+@media print {
+  body { background:#fff; color:#000; }
+  .site-header { background:#fff !important; border-bottom:1px solid #ccc; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .header-back, .doc-actions, #view-home { display:none !important; }
+  #view-doc { display:block !important; padding:0; }
+  .section-block, .directive-block, .sig-block, .doc-banner { border:1px solid #ddd; background:#fff; page-break-inside:avoid; break-inside:avoid; }
+  .section-hd, .dir-hd { background:#f5f5f5 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  th { background:#eee !important; color:#333; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  td { color:#111; }
+  .dir-badge, .doc-type-tag { border:1px solid #aaa; color:#333; background:#f5f5f5 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .doc-equip-name { color:#000; }
+  .doc-model-line, .sig-val { color:#333; font-family:monospace; }
+  .sig-img-box { border:1px solid #ccc; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<header class="site-header">
+  <div class="logo-wrap">
+    <img src="FGD(R)Comma&Strap.png" alt="FGD" onerror="this.style.display='none'">
+    <div>
+      <div class="logo-text">FGD</div>
+      <div class="logo-sub">Fire &amp; Gas Detection Technologies</div>
+    </div>
+  </div>
+  <div class="header-docnum" id="hdr-docnum"></div>
+  <div class="header-back" id="hdr-back" onclick="goHome()">
+    ← Back to Portal
+  </div>
+</header>
+
+<!-- ═══════════════════ VIEW: HOME ═══════════════════ -->
+<div class="view active" id="view-home">
+  <div class="home-hero">
+    <h1>FlameSpec <span>Document Portal</span></h1>
+    <p>Select a model, document type and variant to generate and print an official EU compliance document.</p>
+  </div>
+
+  <!-- STEP 1: Model -->
+  <div class="sel-step">
+    <div class="sel-step-label">
+      <div class="step-num" id="sn1">1</div>
+      <span>Select Model</span>
+    </div>
+    <div class="model-grid" id="model-grid"></div>
+  </div>
+
+  <!-- STEP 2: Document Type -->
+  <div class="sel-step">
+    <div class="sel-step-label">
+      <div class="step-num locked" id="sn2">2</div>
+      <span>Select Document Type</span>
+    </div>
+    <div class="doctype-row" id="doctype-row">
+      <div class="doctype-card" id="card-doc" onclick="selectDocType('DOC')">
+        <div class="dc-icon">⚡</div>
+        <div class="dc-title">Declaration of Conformity</div>
+        <div class="dc-abbr">EU DoC</div>
+        <div class="dc-sub">ATEX · EMC · MED · CPR directives confirmed by accredited notified bodies.</div>
+      </div>
+      <div class="doctype-card" id="card-dop" onclick="selectDocType('DOP')">
+        <div class="dc-icon">📋</div>
+        <div class="dc-title">Declaration of Performance</div>
+        <div class="dc-abbr">EU DoP</div>
+        <div class="dc-sub">EN 54-10:2002 + A1:2005 · CPR 305/2011 performance declaration.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: Selectors -->
+  <div class="sel-step">
+    <div class="sel-step-label">
+      <div class="step-num locked" id="sn3">3</div>
+      <span>Select Variant</span>
+    </div>
+    <div class="var-row" id="var-row">
+      <div class="sel-group" id="rep-group" style="display:none">
+        <label for="sel-rep">Representative</label>
+        <select id="sel-rep" onchange="onSelChange()">
+          <option value="FGD">Fire &amp; Gas Detection Technologies Inc. (FGD)</option>
+          <option value="EVOKS">EVOKS l.l.c. (Authorised Representative)</option>
+        </select>
+      </div>
+      <div class="sel-group">
+        <label for="sel-variant">Variant</label>
+        <select id="sel-variant" disabled onchange="onSelChange()">
+          <option value="">— Select variant —</option>
+        </select>
+      </div>
+    </div>
+    <button class="view-btn" id="view-btn" onclick="openDocument()">View Document →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ VIEW: DOCUMENT ═══════════════════ -->
+<div class="view" id="view-doc">
+  <div class="doc-actions">
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 6 2 18 2 18 9"/>
+        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+        <rect x="6" y="14" width="12" height="8"/>
+      </svg>
+      Print / Save PDF
+    </button>
+  </div>
+
+  <!-- Banner -->
+  <div class="doc-banner">
+    <div class="doc-banner-left">
+      <div class="doc-type-tag" id="doc-type-tag"></div>
+      <div class="doc-equip-name" id="doc-equip-name"></div>
+      <div class="doc-model-line" id="doc-model-line"></div>
+    </div>
+    <div id="doc-banner-cert" style="text-align:right"></div>
+  </div>
+
+  <!-- Content injected here -->
+  <div id="doc-sections-wrapper"></div>
+
+  <!-- Signatory -->
+  <div class="sig-block">
+    <div class="sig-field">
+      <span class="sig-label">Name</span>
+      <span class="sig-val" id="sig-name"></span>
+    </div>
+    <div class="sig-field">
+      <span class="sig-label">At</span>
+      <span class="sig-val" style="font-size:12px; font-family:var(--sans); color:var(--text-mid)">2570 E. Cerritos Ave, Anaheim, CA 92806, USA</span>
+    </div>
+    <div class="sig-field">
+      <span class="sig-label">Date of Issue</span>
+      <span class="sig-val" id="sig-date"></span>
+    </div>
+    <div class="sig-img-box">
+      <div class="sig-label">Signature</div>
+      <img src="Jeremy sig.svg" alt="Signature" onerror="this.style.display='none'">
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let selectedModel   = null;
+let selectedDocType = null; // 'DOC' | 'DOP'
+
+/* ═══════════════════════════════════════════
+   MODELS
+═══════════════════════════════════════════ */
+const MODELS = [
+  { id:'FLS-IR3',       tag:'IR3',       name:'FLS-IR3',       desc:'Triple IR Flame Detector' },
+  { id:'FLS-IR3-HD',    tag:'IR3-HD',    name:'FLS-IR3-HD',    desc:'Triple IR High Def' },
+  { id:'FLS-IR3-H2',    tag:'IR3-H2',    name:'FLS-IR3-H2',    desc:'Triple IR + Hydrogen' },
+  { id:'FLS-IR3-H2-HD', tag:'IR3-H2-HD', name:'FLS-IR3-H2-HD', desc:'IR3 + Hydrogen High Def' },
+  { id:'FLS-UV-IR',     tag:'UV-IR',     name:'FLS-UV-IR',     desc:'UV + IR Flame Detector' },
+  { id:'FLS-UV-IR-HD',  tag:'UV-IR-HD',  name:'FLS-UV-IR-HD',  desc:'UV-IR High Definition' },
+  { id:'FLS-UV-IR-F',   tag:'UV-IR-F',   name:'FLS-UV-IR-F',   desc:'UV-IR Forward Model' },
+  { id:'FLS-UV-IR-F-HD',tag:'UV-IR-F-HD',name:'FLS-UV-IR-F-HD',desc:'UV-IR Forward High Def' },
+];
+
+/* ═══════════════════════════════════════════
+   DoC DATA
+═══════════════════════════════════════════ */
+const ATEX_COMMON = {
+  typeExamBody:'ICQC LTD, 63-19 Skolas Street, Jurmala, LV-2016 Latvia',
+  typeExamBodyNo:'CE2549',
+  qaBody:'FM Approvals Europe Limited, Dublin, Ireland. D02 E440',
+  qaBodyNo:'CE2809',
+  qancertno:'FM21ATEXQ0037',
+  standards:`EN IEC 60079-0:2018+AC:2020-02\nEN 60079-1:2014+AC:2018-09\nEN IEC 60079-7:2015+A1:2018\nEN IEC 60079-31:2024`,
+  markings:`II 2 G Ex db IIC T* Gb or II 2 G Ex db eb IIC T* Gb\nII 2D Ex tb IIIC T*°C Db\nT6/T85°C: -55°C < Ta < +60°C\nT5/T95°C: -55°C < Ta < +75°C\nT4/T105°C: -55°C < Ta < +85°C`
+};
+const EMC_COMMON = { ref:'2014/30/EU', standards:`EN50130-4:2011\nEN61000-6-4:2007/A1:2011` };
+const atex = certNo => ({ ref:'2014/34/EU', ...ATEX_COMMON, certNo });
+
+/* CPR blocks return null (not shown in DoC) */
+const CPR_EMI = () => null;
+const CPR_VDS = () => null;
+
+const DOC_DB = {
+  'FLS-IR3': {
+    'ASx0':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-ASxX',         sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1-VdS': { docNo:'X120V1020.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-ASx1 (VdS)',   sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
+    'ASx3':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-ASxX',         sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-ASxX',         sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0':     { docNo:'X120V0021.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-CSx0',         sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSxE':     { docNo:'X111V0020.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3-CSxE',         sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+  },
+  'FLS-IR3-HD': {
+    'ASx0': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx2': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx3': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx4': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx7': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0': { docNo:'X101V0021.01', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-CSx0', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSxE': { docNo:'X111V0021.01', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD-CSxE', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+  },
+  'FLS-IR3-H2': {
+    'ASx0':     { docNo:'X150V0020.07', equip:'FlameSpec IR3-H2 Flame Detector', modelNo:'FLS-IR3-H2-ASxX',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON } },
+    'ASx1':     { docNo:'X150V0020.07', equip:'FlameSpec IR3-H2 Flame Detector', modelNo:'FLS-IR3-H2-ASxX',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON } },
+    'ASx3-VdS': { docNo:'X150V1020.03', equip:'FlameSpec IR3-H2 Flame Detector', modelNo:'FLS-IR3-H2-ASx3 (VdS)', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
+    'ASx5':     { docNo:'X150V0020.07', equip:'FlameSpec IR3-H2 Flame Detector', modelNo:'FLS-IR3-H2-ASxX',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON } },
+    'CSx0':     { docNo:'X150V0021.01', equip:'FlameSpec IR3-H2 Flame Detector', modelNo:'FLS-IR3-H2-CSx0',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+  },
+  'FLS-IR3-H2-HD': {
+    'ASx0': { docNo:'X140V0020.07', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'30/09/2024', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON } },
+    'ASx1': { docNo:'X140V0020.07', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'30/09/2024', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON } },
+    'ASx2': { docNo:'X140V0020.07', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'30/09/2024', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON } },
+    'ASx3': { docNo:'X140V1020.02', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx4': { docNo:'X140V1020.02', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5': { docNo:'X140V0020.07', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-ASxX', sig:'Jeremy Zhou', date:'30/09/2024', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON } },
+    'CSx0': { docNo:'X140V0021.01', equip:'FlameSpec IR3-H2-HD Flame Detector', modelNo:'FLS-IR3-H2-HD-CSx0', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+  },
+  'FLS-UV-IR': {
+    'ASx0':     { docNo:'X110V0020.07', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR-ASxX',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1-VdS': { docNo:'X110V1020.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR-ASx1 (VdS)', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
+    'ASx5':     { docNo:'X110V0020.07', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR-ASxX',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0':     { docNo:'X110V0021.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR-CSx0',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSxE':     { docNo:'X111V0022.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV/IR-CSxE',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+  },
+  'FLS-UV-IR-HD': {
+    'ASx0': { docNo:'X130V0020.07', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1': { docNo:'X130V0020.07', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx2': { docNo:'X130V0020.07', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5': { docNo:'X130V0020.07', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-ASxX', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0': { docNo:'X130V0021.01', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-CSx0', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ CPR:CPR_EMI() } },
+    'CSxE': { docNo:'X111V0023.01', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD-CSxE', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+  },
+  'FLS-UV-IR-F': {
+    'ASx0': { docNo:'X160V0020.07', equip:'FlameSpec UV-IR-F Flame Detector', modelNo:'FLS-UV-IR-F-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1': { docNo:'X160V0020.07', equip:'FlameSpec UV-IR-F Flame Detector', modelNo:'FLS-UV-IR-F-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5': { docNo:'X160V0020.07', equip:'FlameSpec UV-IR-F Flame Detector', modelNo:'FLS-UV-IR-F-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0': { docNo:'X160V0021.01', equip:'FlameSpec UV-IR-F Flame Detector', modelNo:'FLS-UV-IR-F-CSx0', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+  },
+  'FLS-UV-IR-F-HD': {
+    'ASx0': { docNo:'X170V0020.07', equip:'FlameSpec UV-IR-F-HD Flame Detector', modelNo:'FLS-UV-IR-F-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1': { docNo:'X170V0020.07', equip:'FlameSpec UV-IR-F-HD Flame Detector', modelNo:'FLS-UV-IR-F-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx2': { docNo:'X170V0020.07', equip:'FlameSpec UV-IR-F-HD Flame Detector', modelNo:'FLS-UV-IR-F-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5': { docNo:'X170V0020.07', equip:'FlameSpec UV-IR-F-HD Flame Detector', modelNo:'FLS-UV-IR-F-HD-ASxX', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0': { docNo:'X170V0021.01', equip:'FlameSpec UV-IR-F-HD Flame Detector', modelNo:'FLS-UV-IR-F-HD-CSx0', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+  },
+};
+
+const DOC_VARIANTS = {
+  'FLS-IR3':       ['ASx0','ASx1-VdS','ASx3','ASx5','CSx0','CSxE'],
+  'FLS-IR3-HD':    ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','ASx7','CSx0','CSxE'],
+  'FLS-IR3-H2':    ['ASx0','ASx1','ASx3-VdS','ASx5','CSx0'],
+  'FLS-IR3-H2-HD': ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','CSx0'],
+  'FLS-UV-IR':     ['ASx0','ASx1-VdS','ASx5','CSx0','CSxE'],
+  'FLS-UV-IR-HD':  ['ASx0','ASx1','ASx2','ASx5','CSx0','CSxE'],
+  'FLS-UV-IR-F':   ['ASx0','ASx1','ASx5','CSx0'],
+  'FLS-UV-IR-F-HD':['ASx0','ASx1','ASx2','ASx5','CSx0'],
+};
+
+const DOC_FIELD_LABELS = {
+  typeExamBody:'Type Exam Body', typeExamBodyNo:'Type Exam Body No.',
+  qaBody:'QA Body', qaBodyNo:'QA Body No.',
+  qancertno:'QAN Certificate No.', certNo:'EC Certificate No.',
+  cprCertNo:'Certificate of Constancy', vdsCertNo:'VdS Certificate No.',
+  markings:'Markings', standards:'Standards',
+  body:'Approval Body', bodyNo:'Body No.',
+  notifiedBody:'Notified Body', notifiedBodyNo:'Notified Body No.',
+  standard:'Harmonised Standard',
+};
+
+/* ═══════════════════════════════════════════
+   DoP DATA
+═══════════════════════════════════════════ */
+const REPS = {
+  'FGD':   'Fire & Gas Detection Technologies Inc.\n2570 E. Cerritos Ave, Anaheim, CA 92806, USA',
+  'EVOKS': 'EVOKS l.l.c.\nDunajska cesta 136, 1000 Ljubljana, SLOVENIA',
+};
+
+const CPR91 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-91-(C-63/2019)' };
+const CPR92 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-92-(C-63/2019)' };
+const CPR93 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-93-(C-63/2019)' };
+const VDS33 = { standard:'VdS 2543:2021-03\nEN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'G225033' };
+const VDS34 = { standard:'VdS 2543:2021-03\nEN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'G225034' };
+const VDS35 = { standard:'VdS 2543:2021-03\nEN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'G225035' };
+
+const DOP_DB = {
+  'FLS-IR3': {
+    'ASXX':    { FGD:{ docNo:'X120V0030-04', date:'27/05/2024', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X120V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'CSX0':    { FGD:{ docNo:'X120V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X120V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'ASX1-VDS':{ FGD:{ docNo:'X120V1030-00', date:'27/10/2025', sig:'Idan Celeste', cpr:VDS33 }, EVOKS:{ docNo:'X120V1029-00', date:'29/12/2025', sig:'Idan Celeste', cpr:VDS33 } },
+  },
+  'FLS-IR3-HD': {
+    'ASXX': { FGD:{ docNo:'X101V0030-04', date:'29/09/2024', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X101V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'CSX0': { FGD:{ docNo:'X101V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X101V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+  },
+  'FLS-IR3-H2': {
+    'ASXX':    { FGD:{ docNo:'X150V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X150V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'CSX0':    { FGD:{ docNo:'X150V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X150V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'ASX3-VDS':{ FGD:{ docNo:'X150V1030-00', date:'27/10/2025', sig:'Idan Celeste', cpr:VDS35 }, EVOKS:{ docNo:'X150V1029-00', date:'29/12/2025', sig:'Idan Celeste', cpr:VDS35 } },
+  },
+  'FLS-IR3-H2-HD': {
+    'ASXX': { FGD:{ docNo:'X140V0030-01', date:'29/09/2024', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X140V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+    'CSX0': { FGD:{ docNo:'X140V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR91 }, EVOKS:{ docNo:'X140V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR91 } },
+  },
+  'FLS-UV-IR': {
+    'ASXX':    { FGD:{ docNo:'X110V0030-04', date:'29/09/2024', sig:'Olden Carr', cpr:CPR92 }, EVOKS:{ docNo:'X110V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR92 } },
+    'CSX0':    { FGD:{ docNo:'X110V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR92 }, EVOKS:{ docNo:'X110V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR92 } },
+    'ASX1-VDS':{ FGD:{ docNo:'X110V1030-00', date:'27/10/2025', sig:'Olden Carr', cpr:VDS34 }, EVOKS:{ docNo:'X110V1029-00', date:'29/12/2025', sig:'Olden Carr', cpr:VDS34 } },
+  },
+  'FLS-UV-IR-HD': {
+    'ASXX': { FGD:{ docNo:'X130V0030-04', date:'29/09/2024', sig:'Olden Carr', cpr:CPR92 }, EVOKS:{ docNo:'X130V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR92 } },
+    'CSX0': { FGD:{ docNo:'X130V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR92 }, EVOKS:{ docNo:'X130V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR92 } },
+  },
+  'FLS-UV-IR-F': {
+    'ASXX': { FGD:{ docNo:'X160V0030-04', date:'29/09/2024', sig:'Olden Carr', cpr:CPR93 }, EVOKS:{ docNo:'X160V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR93 } },
+    'CSX0': { FGD:{ docNo:'X160V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR93 }, EVOKS:{ docNo:'X160V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR93 } },
+  },
+  'FLS-UV-IR-F-HD': {
+    'ASXX': { FGD:{ docNo:'X170V0030-04', date:'27/05/2024', sig:'Olden Carr', cpr:CPR93 }, EVOKS:{ docNo:'X170V0029-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR93 } },
+    'CSX0': { FGD:{ docNo:'X170V0031-00', date:'05/05/2025', sig:'Olden Carr', cpr:CPR93 }, EVOKS:{ docNo:'X170V0129-00', date:'29/12/2025', sig:'Olden Carr', cpr:CPR93 } },
+  },
+};
+
+const DOP_VARIANTS = {
+  'FLS-IR3':       ['ASx0','ASx1-VdS','CSx0'],
+  'FLS-IR3-HD':    ['ASx0','CSx0'],
+  'FLS-IR3-H2':    ['ASx0','ASx3-VdS','CSx0'],
+  'FLS-IR3-H2-HD': ['ASx0','CSx0'],
+  'FLS-UV-IR':     ['ASx0','ASx1-VdS','CSx0'],
+  'FLS-UV-IR-HD':  ['ASx0','CSx0'],
+  'FLS-UV-IR-F':   ['ASx0','CSx0'],
+  'FLS-UV-IR-F-HD':['ASx0','CSx0'],
+};
+
+/* Performance table HTML */
+function perfTableIR3() {
+  return `<div class="perf-wrap"><table>
+    <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
+    <tbody>
+    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low – Class 2<br>Med/High/Extreme – Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
+    <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
+    <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
+    <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
+    <tr><td>Durability; corrosion resistance</td><td>Pass</td><td>5.11</td></tr>
+    <tr><td>Durability; vibration resistance</td><td>Pass</td><td>5.12–5.15</td></tr>
+    <tr><td>Tolerance to supply voltage</td><td>Pass</td><td>5.16</td></tr>
+    <tr><td>Durability; electrical stability</td><td>Pass</td><td>5.17</td></tr>
+    </tbody></table></div>`;
+}
+function perfTableUVIR() {
+  return `<div class="perf-wrap"><table>
+    <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
+    <tbody>
+    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low – NPD<br>Medium – Class 2<br>High/Extreme – Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
+    <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
+    <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
+    <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
+    <tr><td>Durability; corrosion resistance</td><td>Pass</td><td>5.11</td></tr>
+    <tr><td>Durability; vibration resistance</td><td>Pass</td><td>5.12–5.15</td></tr>
+    <tr><td>Tolerance to supply voltage</td><td>Pass</td><td>5.16</td></tr>
+    <tr><td>Durability; electrical stability</td><td>Pass</td><td>5.17</td></tr>
+    </tbody></table></div>`;
+}
+
+/* ═══════════════════════════════════════════
+   INIT — Build model grid
+═══════════════════════════════════════════ */
+(function initGrid() {
+  const grid = document.getElementById('model-grid');
+  MODELS.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'model-card';
+    card.dataset.id = m.id;
+    card.innerHTML = `<div class="mc-tag">${m.tag}</div><div class="mc-name">${m.name}</div><div class="mc-desc">${m.desc}</div>`;
+    card.onclick = () => selectModel(m.id);
+    grid.appendChild(card);
+  });
+})();
+
+/* ═══════════════════════════════════════════
+   STEP LOGIC
+═══════════════════════════════════════════ */
+function selectModel(id) {
+  selectedModel = id;
+  selectedDocType = null;
+
+  // Highlight card
+  document.querySelectorAll('.model-card').forEach(c => c.classList.toggle('selected', c.dataset.id === id));
+
+  // Step indicators
+  document.getElementById('sn1').classList.add('done');
+  document.getElementById('sn2').className = 'step-num';
+  document.getElementById('sn3').className = 'step-num locked';
+
+  // Enable doc type cards, reset selection
+  document.getElementById('doctype-row').classList.add('enabled');
+  document.getElementById('card-doc').classList.remove('selected');
+  document.getElementById('card-dop').classList.remove('selected');
+
+  // Reset step 3
+  document.getElementById('var-row').classList.remove('enabled');
+  document.getElementById('var-row').className = 'var-row';
+  document.getElementById('sel-variant').innerHTML = '<option value="">— Select variant —</option>';
+  document.getElementById('sel-variant').disabled = true;
+  document.getElementById('rep-group').style.display = 'none';
+  document.getElementById('view-btn').classList.remove('show');
+}
+
+function selectDocType(type) {
+  if (!selectedModel) return;
+  selectedDocType = type;
+
+  document.getElementById('card-doc').classList.toggle('selected', type === 'DOC');
+  document.getElementById('card-dop').classList.toggle('selected', type === 'DOP');
+  document.getElementById('sn2').className = 'step-num done';
+  document.getElementById('sn3').className = 'step-num';
+
+  // Build variant list
+  const variants = type === 'DOC' ? (DOC_VARIANTS[selectedModel] || []) : (DOP_VARIANTS[selectedModel] || []);
+  const vSel = document.getElementById('sel-variant');
+  vSel.innerHTML = '<option value="">— Select variant —</option>';
+  variants.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v;
+    o.textContent = v.replace(/-VdS/i, '');
+    vSel.appendChild(o);
+  });
+  vSel.disabled = false;
+
+  // Show rep for DoP
+  const repGroup = document.getElementById('rep-group');
+  repGroup.style.display = type === 'DOP' ? '' : 'none';
+
+  // Set grid columns
+  const varRow = document.getElementById('var-row');
+  varRow.className = 'var-row enabled ' + (type === 'DOP' ? 'cols-2' : 'cols-1');
+
+  document.getElementById('view-btn').classList.remove('show');
+}
+
+function onSelChange() {
+  const v = document.getElementById('sel-variant').value;
+  document.getElementById('view-btn').classList.toggle('show', !!v);
+}
+
+/* ═══════════════════════════════════════════
+   OPEN DOCUMENT
+═══════════════════════════════════════════ */
+function openDocument() {
+  const variant  = document.getElementById('sel-variant').value;
+  const repCode  = document.getElementById('sel-rep').value || 'FGD';
+  if (!variant || !selectedModel || !selectedDocType) return;
+
+  if (selectedDocType === 'DOC') renderDoC(selectedModel, variant);
+  else                           renderDoP(selectedModel, variant, repCode);
+
+  showView('doc');
+}
+
+/* ═══════════════════════════════════════════
+   RENDER DoC
+═══════════════════════════════════════════ */
+function renderDoC(model, variant) {
+  const rec = DOC_DB[model] && DOC_DB[model][variant];
+  if (!rec) { alert('Document not found.'); return; }
+
+  // Header
+  document.getElementById('doc-type-tag').textContent  = 'EU Declaration of Conformity';
+  document.getElementById('doc-type-tag').className     = 'doc-type-tag tag-doc';
+  document.getElementById('doc-equip-name').textContent = rec.equip;
+  document.getElementById('doc-model-line').textContent = `Model: ${rec.modelNo}  ·  Variant: ${variant.replace(/-VdS/i,'')}`;
+  document.getElementById('doc-banner-cert').innerHTML  = `<div style="font-family:var(--mono);font-size:11px;color:var(--text-dim)">DoC No.</div><div style="font-family:var(--mono);font-size:14px;color:var(--amber);margin-top:2px">${rec.docNo}</div>`;
+  document.getElementById('hdr-docnum').textContent = rec.docNo;
+  document.getElementById('sig-name').textContent  = rec.sig;
+  document.getElementById('sig-date').textContent  = rec.date;
+
+  // Preamble section
+  let html = `<div class="sections-wrapper"><div class="section-block"><div class="section-hd"><span class="section-hd-num">§</span><span class="section-hd-title">Declaration</span></div>
+  <div class="section-body" style="font-size:13px;color:var(--text-mid);line-height:1.7">
+    Fire &amp; Gas Detection Technologies Inc. declares under our sole responsibility that our equipment or protective system conforms to the relevant safety and health related requirements of the appropriate EU directive(s) listed below.
+    <br><br>
+    <strong style="color:var(--text)">Manufacturer:</strong> Fire &amp; Gas Detection Technologies Inc., 2570 E. Cerritos Ave, Anaheim, CA 92806, USA
+  </div></div>`;
+
+  // Directives
+  const BADGE = { ATEX:'badge-atex', MED:'badge-med', EMC:'badge-emc', CPR:'badge-cpr' };
+  const DIR_NAME = { ATEX:'ATEX Directive', MED:'Marine Equipment Directive', EMC:'EMC Directive', CPR:'Construction Products Regulation (CPR)' };
+  const DIR_ICON = { ATEX:`<img src="ATEX LOGO.svg" onerror="this.style.display='none'">`, MED:`<img src="DNV LOGO.svg" onerror="this.style.display='none'">` };
+
+  Object.entries(rec.directives).forEach(([key, d]) => {
+    if (!d) return;
+    let fields = '';
+    Object.entries(d).forEach(([prop, val]) => {
+      if (prop === 'ref' || !DOC_FIELD_LABELS[prop]) return;
+      fields += `<div class="field-row"><span class="fk">${DOC_FIELD_LABELS[prop]}</span><span class="fv">${esc(val)}</span></div>`;
+    });
+    html += `<div class="directive-block">
+      <div class="dir-hd">
+        <div class="dir-hd-left">
+          ${DIR_ICON[key] ? `<div class="dir-mark">${DIR_ICON[key]}</div>` : ''}
+          <span class="dir-hd-name">${DIR_NAME[key] || key+' Directive'}</span>
+          ${d.ref ? `<span class="dir-hd-ref">${esc(d.ref)}</span>` : ''}
+        </div>
+        <span class="dir-badge ${BADGE[key]||'badge-emc'}">${key}</span>
+      </div>
+      <div class="dir-body">${fields}</div>
+    </div>`;
+  });
+
+  html += '</div>';
+  document.getElementById('doc-sections-wrapper').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   RENDER DoP
+═══════════════════════════════════════════ */
+function renderDoP(model, variant, repCode) {
+  // Normalise variant key for DB lookup
+  let dbKey = variant.toUpperCase();
+  if (dbKey.includes('-VDS')) { /* keep */ }
+  else if (dbKey.startsWith('ASX')) dbKey = 'ASXX';
+  else if (dbKey.startsWith('CSX')) dbKey = 'CSX0';
+
+  const rec = DOP_DB[model] && DOP_DB[model][dbKey] && DOP_DB[model][dbKey][repCode];
+  if (!rec) { alert('Document not found for this combination.'); return; }
+
+  const cpr = rec.cpr;
+  const repText = REPS[repCode] || '';
+  const isUVIR  = model.includes('UV-IR');
+  const varDisplay = variant.replace(/-VdS/i, '');
+
+  document.getElementById('doc-type-tag').textContent  = 'EU Declaration of Performance';
+  document.getElementById('doc-type-tag').className     = 'doc-type-tag tag-dop';
+  document.getElementById('doc-equip-name').textContent = `FlameSpec ${model.replace('FLS-','')} Flame Detector`;
+  document.getElementById('doc-model-line').textContent = `Model: ${model}  ·  Variant: ${varDisplay}`;
+  document.getElementById('doc-banner-cert').innerHTML  = `<div style="font-family:var(--mono);font-size:11px;color:var(--text-dim)">DoP Ref.</div><div style="font-family:var(--mono);font-size:14px;color:var(--amber);margin-top:2px">${rec.docNo}</div>`;
+  document.getElementById('hdr-docnum').textContent = rec.docNo;
+  document.getElementById('sig-name').textContent  = rec.sig;
+  document.getElementById('sig-date').textContent  = rec.date;
+
+  const html = `<div class="sections-wrapper">
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 2</span><span class="section-hd-title">Intended Use</span></div>
+    <div class="section-body">Fire safety</div></div>
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 3</span><span class="section-hd-title">Manufacturer</span></div>
+    <div class="section-body">Fire &amp; Gas Detection Technologies Inc.<br><span style="color:var(--text-mid);font-size:12.5px">2570 E. Cerritos Ave, Anaheim, CA 92806, USA</span></div></div>
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 4</span><span class="section-hd-title">Authorised Representative</span></div>
+    <div class="section-body mono">${esc(repText)}</div></div>
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 5</span><span class="section-hd-title">System of AVCP</span></div>
+    <div class="section-body">System 1</div></div>
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 6</span><span class="section-hd-title">Harmonised Standard &amp; Notified Body</span></div>
+    <div class="section-body">
+      <div class="field-row"><span class="fk">Standard</span><span class="fv">${esc(cpr.standard)}</span></div>
+      <div class="field-row"><span class="fk">Notified Body</span><span class="fv">${esc(cpr.nb)}</span></div>
+      <div class="field-row"><span class="fk">NB Number</span><span class="fv">${esc(cpr.nbNo)}</span></div>
+      <div class="field-row"><span class="fk">EC Certificate No.</span><span class="fv">${esc(cpr.cert)}</span></div>
+    </div></div>
+
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">§ 7</span><span class="section-hd-title">Declared Performance</span></div>
+    <div class="section-body" style="padding:0">${isUVIR ? perfTableUVIR() : perfTableIR3()}</div></div>
+
+  </div>`;
+
+  document.getElementById('doc-sections-wrapper').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   VIEW MANAGEMENT
+═══════════════════════════════════════════ */
+function showView(v) {
+  document.getElementById('view-home').classList.toggle('active', v === 'home');
+  document.getElementById('view-doc').classList.toggle('active', v === 'doc');
+  document.getElementById('hdr-back').classList.toggle('show', v === 'doc');
+  document.getElementById('hdr-docnum').classList.toggle('show', v === 'doc');
+  if (v === 'home') {
+    document.getElementById('hdr-docnum').textContent = '';
+  }
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+function goHome() { showView('home'); }
+
+/* Helpers */
+function esc(t) {
+  if (t == null) return '';
+  return String(t).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])).replace(/\n/g,'<br>');
+}
+</script>
+</body>
+</html>
