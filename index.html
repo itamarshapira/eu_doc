@@ -40,7 +40,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 ═══════════════════════════════════════ */
 .site-header {
   position: sticky; top:0; z-index:200;
-  background: rgba(11,14,19,.92);
+  background: rgba(250, 251, 252, 0.92);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
   padding: 0 32px;
@@ -197,6 +197,7 @@ h1.doc-type-title {
   color: var(--text);
   margin-bottom: 16px;
   letter-spacing: -0.01em;
+  text-align: center; /* This centers the text */
 }
 
 /* Doc header strip */
@@ -266,7 +267,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 ═══════════════════════════════════════ */
 @media print {
   body { background:#fff; color:#000; }
-  .site-header { background:#fff !important; border-bottom:1px solid #ccc; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .site-header { background:#fdfdfd !important; border-bottom:1px solid #ccc; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .header-back, .doc-actions, #view-home { display:none !important; }
   #view-doc { display:block !important; padding:0; }
   .section-block, .directive-block, .sig-block, .doc-banner { border:1px solid #ddd; background:#fff; page-break-inside:avoid; break-inside:avoid; }
@@ -285,7 +286,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 
 <header class="site-header">
   <div class="logo-wrap">
-    <img src="FGD LOGO.svg" alt="FGD" onerror="this.style.display='none'">
+    <img src="FGD(R)Comma&Strap.png" alt="FGD" onerror="this.style.display='none'">
     <div>
 
     </div>
@@ -432,12 +433,12 @@ const CPR_VDS = () => null;
 
 const DOC_DB = {
   'FLS-IR3': {
-    'ASx0':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
-    'ASx1-VdS': { docNo:'X120V1020.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
-    'ASx3':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
-    'ASx5':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
-    'CSx0':     { docNo:'X120V0021.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
-    'CSxE':     { docNo:'X111V0020.01', equip:'FlameSpec IR3 Flame Detector',    modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+    'ASx0':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx1-VdS': { docNo:'X120V1020.01', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
+    'ASx3':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'ASx5':     { docNo:'X120V0020.07', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSx0':     { docNo:'X120V0021.01', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
+    'CSxE':     { docNo:'X111V0020.01', equip:'FlameSpec IR3 Flame Detector', modelNo:'FLS-IR3', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
   },
   'FLS-IR3-HD': {
     'ASx0': { docNo:'X101V0020.07', equip:'FlameSpec IR3-HD Flame Detector', modelNo:'FLS-IR3-HD', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
@@ -471,7 +472,7 @@ const DOC_DB = {
     'ASx1-VdS': { docNo:'X110V1020.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_VDS() } },
     'ASx5':     { docNo:'X110V0020.07', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0424 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
     'CSx0':     { docNo:'X110V0021.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV-IR', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON, CPR:CPR_EMI() } },
-    'CSxE':     { docNo:'X111V0022.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV/IR',       sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
+    'CSxE':     { docNo:'X111V0022.01', equip:'FlameSpec UV-IR Flame Detector', modelNo:'FLS-UV/IR', sig:'Jeremy Zhou', date:'28/04/2026', directives:{ EMC:EMC_COMMON } },
   },
   'FLS-UV-IR-HD': {
     'ASx0': { docNo:'X130V0020.07', equip:'FlameSpec UV-IR-HD Flame Detector', modelNo:'FLS-UV-IR-HD', sig:'Jeremy Zhou', date:'02/02/2026', directives:{ ATEX:atex('ICQC 19 ATEX 0423 X'), EMC:EMC_COMMON, CPR:CPR_EMI() } },
@@ -521,14 +522,14 @@ const DOC_FIELD_LABELS = {
 /* ═══════════════════════════════════════════
    DoP DATA
 ═══════════════════════════════════════════ */
-const CPR_EMI_91 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-91-(C-63/2019)' };
-const CPR_EMI_92 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-92-(C-63/2019)' };
-const CPR_EMI_93 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-93-(C-63/2019)' };
+const CPR_EMI_91 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-140-(C-17/2025)' };
+const CPR_EMI_92 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-141-(C-17-2025)' };
+const CPR_EMI_93 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-142-(C-17/2025)' };
 
-// ⚠️ PLEASE ADD THE CORRECT CPR CERTIFICATE NUMBERS FOR THESE 3 OBJECTS: 
-const CPR_VDS_33 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'[UPDATE TO CPR NUMBER]' };
-const CPR_VDS_34 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'[UPDATE TO CPR NUMBER]' };
-const CPR_VDS_35 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'[UPDATE TO CPR NUMBER]' };
+// 
+const CPR_VDS_33 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21874', cert:'G225033' };
+const CPR_VDS_34 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21875', cert:'G225034' };
+const CPR_VDS_35 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21876', cert:'G225035' };
 
 const DOP_DB = {
   "FLS-IR3": {
@@ -778,19 +779,19 @@ function renderDoP(model, variant) {
 
   const html = `<div class="sections-wrapper">
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 2</span><span class="section-hd-title">Intended Use</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">1</span><span class="section-hd-title">Intended Use</span></div>
     <div class="section-body">Fire safety</div></div>
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 3</span><span class="section-hd-title">Manufacturer</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">2</span><span class="section-hd-title">Manufacturer</span></div>
     <div class="section-body">Fire &amp; Gas Detection Technologies Inc.<br><span style="color:var(--text-mid);font-size:12.5px">2570 E. Cerritos Ave, Anaheim, CA 92806, USA</span></div></div>
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 4</span><span class="section-hd-title">Authorised Representative</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">3</span><span class="section-hd-title">Authorised Representative</span></div>
     <div class="section-body mono">${esc(repText)}</div></div>
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 5</span><span class="section-hd-title">System of AVCP</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">4</span><span class="section-hd-title">System of AVCP</span></div>
     <div class="section-body">System 1</div></div>
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 6</span><span class="section-hd-title">Harmonised Standard &amp; Notified Body</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">5</span><span class="section-hd-title">Harmonised Standard &amp; Notified Body</span></div>
     <div class="section-body">
       <div class="field-row"><span class="fk">Standard</span><span class="fv">${esc(cpr.standard)}</span></div>
       <div class="field-row"><span class="fk">Notified Body</span><span class="fv">${esc(cpr.nb)}</span></div>
@@ -798,7 +799,7 @@ function renderDoP(model, variant) {
       <div class="field-row"><span class="fk">EC Certificate No.</span><span class="fv">${esc(cpr.cert)}</span></div>
     </div></div>
 
-    <div class="section-block"><div class="section-hd"><span class="section-hd-num"> 7</span><span class="section-hd-title">Declared Performance</span></div>
+    <div class="section-block"><div class="section-hd"><span class="section-hd-num">6</span><span class="section-hd-title">Declared Performance</span></div>
     <div class="section-body" style="padding:0">${isUVIR ? perfTableUVIR() : perfTableIR3()}</div></div>
 
   </div>`;
