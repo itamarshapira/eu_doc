@@ -17,8 +17,8 @@
   --s3:         #1e2535;
   --border:     #252d3f;
   --border2:    #2e3850;
-  --amber:      #f5a623;
-  --amber-d:    #b8731a;
+  --amber:      #df302a;
+  --amber-d:    #f55105;
   --amber-glow: rgba(245,166,35,.13);
   --blue:       #5b9cf6;
   --blue-glow:  rgba(91,156,246,.12);
@@ -527,9 +527,9 @@ const CPR_EMI_92 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI �
 const CPR_EMI_93 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-142-(C-17/2025)' };
 
 // 
-const CPR_VDS_33 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21874', cert:'G225033' };
-const CPR_VDS_34 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21875', cert:'G225034' };
-const CPR_VDS_35 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786-CPR-21876', cert:'G225035' };
+const CPR_VDS_33 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21874' };
+const CPR_VDS_34 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21875' };
+const CPR_VDS_35 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21876' };
 
 const DOP_DB = {
   "FLS-IR3": {
@@ -586,7 +586,7 @@ function perfTableIR3() {
   return `<div class="perf-wrap"><table>
     <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
     <tbody>
-    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low – Class 2<br>Med/High/Extreme – Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
+    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low– Class 3<br>Med/High/Extreme– <br>Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
     <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
     <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
     <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
@@ -600,7 +600,7 @@ function perfTableUVIR() {
   return `<div class="perf-wrap"><table>
     <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
     <tbody>
-    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low – NPD<br>Medium – Class 2<br>High/Extreme – Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
+    <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low– 3<br>Med/High/Extreme– <br>Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
     <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
     <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
     <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
@@ -773,7 +773,7 @@ function renderDoP(model, variant) {
   document.getElementById('doc-type-tag').textContent  = 'EU Declaration of Performance';
   document.getElementById('doc-equip-name').textContent = `FlameSpec ${model.replace('FLS-','')} Flame Detector`;
   document.getElementById('doc-model-line').textContent = `Model: ${model}  ·  Variant: ${varDisplay}`;
-  document.getElementById('doc-banner-cert').innerHTML  = `<div style="font-family:var(--mono);font-size:11px;color:var(--text-dim)">DoP Ref.</div><div style="font-family:var(--mono);font-size:14px;color:var(--amber);margin-top:2px">${rec.docNo}</div>`;
+  document.getElementById('doc-banner-cert').innerHTML  = `<div style="font-family:var(--mono);font-size:11px;color:var(--text-dim)">DoP No.</div><div style="font-family:var(--mono);font-size:14px;color:var(--amber);margin-top:2px">${rec.docNo}</div>`;
   document.getElementById('sig-name').textContent  = rec.sig;
   document.getElementById('sig-date').textContent  = rec.date;
 
