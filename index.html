@@ -78,7 +78,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 /* ═══════════════════════════════════════
    HOME VIEW
 ═══════════════════════════════════════ */
-#view-home { max-width:900px; margin:0 auto; padding:48px 24px 64px; }
+#view-home { max-width:960px; margin:0 auto; padding:48px 24px 64px; }
 
 .home-hero { text-align:center; margin-bottom:52px; }
 .home-hero h1 {
@@ -128,7 +128,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 
 /* Doc type cards */
 .doctype-row {
-  display:grid; grid-template-columns:1fr 1fr; gap:14px;
+  display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
   opacity:.35; pointer-events:none; transition:.3s;
 }
 .doctype-row.enabled { opacity:1; pointer-events:all; }
@@ -197,18 +197,17 @@ h1.doc-type-title {
   color: var(--text);
   margin-bottom: 16px;
   letter-spacing: -0.01em;
-  text-align: center; /* This centers the text */
+  text-align: center;
 }
 
 /* Doc header strip */
 .doc-banner {
   background:var(--s2); border:1px solid var(--border); border-radius:10px;
   padding:20px 24px; margin-bottom:20px;
-  display:flex; align-items:center; justify-content:space-between; gap:20px;
+  display:flex; align-items:flex-start; justify-content:space-between; gap:20px;
 }
-.doc-banner-left {}
 .doc-equip-name { font-size:20px; font-weight:700; color:var(--text); line-height:1.2; margin-bottom:5px; }
-.doc-model-line { font-family:var(--mono); font-size:13px; color:var(--amber); }
+.doc-model-line { font-family:var(--mono); font-size:17px; color:var(--amber); }
 
 /* ═══════════════════════════════════════
    DOC SECTIONS (shared grid)
@@ -263,22 +262,76 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 .sig-img-box .sig-label { color:#666; }
 
 /* ═══════════════════════════════════════
+   CE LABEL STYLES
+═══════════════════════════════════════ */
+.ce-label-box {
+  background: var(--s2);
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 40px 30px;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+  color: var(--text);
+}
+.ce-logo-container {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #fff;
+}
+.ce-nb {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-family: var(--sans);
+}
+.ce-text-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-size: 15px;
+  line-height: 1.4;
+}
+.ce-line { color: var(--text); }
+.ce-cert { font-weight: 700; font-size: 17px; }
+.ce-std { font-weight: 600; color: var(--text-mid); }
+.ce-model { font-weight: 700; font-size: 17px; color: var(--amber); }
+.ce-tech { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+
+/* ═══════════════════════════════════════
    PRINT
 ═══════════════════════════════════════ */
 @media print {
   body { background:#fff; color:#000; }
-  .site-header { background:#fdfdfd !important; border-bottom:1px solid #ccc; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+ .site-header { display: flex !important; justify-content: flex-start !important; padding: 0 0 10px 0 !important; background:#fff !important; border-bottom:1px solid #ccc; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .site-header .logo-wrap { justify-content: flex-start !important; }
   .header-back, .doc-actions, #view-home { display:none !important; }
   #view-doc { display:block !important; padding:0; }
+  
   .section-block, .directive-block, .sig-block, .doc-banner { border:1px solid #ddd; background:#fff; page-break-inside:avoid; break-inside:avoid; }
   .section-hd, .dir-hd { background:#f5f5f5 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   th { background:#eee !important; color:#333; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   td { color:#111; }
   .dir-badge { border:1px solid #aaa; color:#333; background:#f5f5f5 !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  
   h1.doc-type-title { color: #000; }
   .doc-equip-name { color:#000; }
   .doc-model-line, .sig-val { color:#333; font-family:monospace; }
   .sig-img-box { border:1px solid #ccc; }
+
+  /* CE Label Print Adjustments */
+  .ce-label-box { background: #fff !important; border: 1px dashed #999; color: #fcf9f9; }
+  .ce-logo-container { color: #f8f0f0; }
+  .ce-line { color: #000; }
+  .ce-std, .ce-tech { color: #555; }
+  .ce-model { color: #000; }
+}
+@media (max-width: 768px) {
+  .doctype-row { grid-template-columns: 1fr; }
+  .model-grid { grid-template-columns: repeat(2, 1fr); }
 }
 </style>
 </head>
@@ -286,10 +339,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 
 <header class="site-header">
   <div class="logo-wrap">
-    <img src="FGD(R)Comma&Strap.png" alt="FGD" onerror="this.style.display='none'">
-    <div>
-
-    </div>
+    <img src="FGD(R)Comma%26Strap.png" alt="FGD Logo" style="height:40px; width:auto;">
   </div>
   <div class="header-back" id="hdr-back" onclick="goHome()">
     ← Back to Portal
@@ -299,7 +349,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 <div class="view active" id="view-home">
   <div class="home-hero">
     <h1>FlameSpec <span>Declaration Portal</span></h1>
-    <p>Select a model, document type and variant to generate and print an official EU compliance document.</p>
+    <p>Select a model, document type and variant to generate and print an official EU compliance document or label.</p>
   </div>
 
   <div class="sel-step">
@@ -327,6 +377,12 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
         <div class="dc-title">Declaration of Performance</div>
         <div class="dc-abbr">EU DoP</div>
         <div class="dc-sub">EN 54-10:2002 + A1:2005 · CPR 305/2011 performance declaration.</div>
+      </div>
+      <div class="doctype-card" id="card-ce" onclick="selectDocType('CE')">
+        <div class="dc-icon">🏷️</div>
+        <div class="dc-title">Product CE Label</div>
+        <div class="dc-abbr">CE Mark</div>
+        <div class="dc-sub">Generate compliance label details including NB numbers and Certifications.</div>
       </div>
     </div>
   </div>
@@ -361,7 +417,8 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
   </div>
 
   <h1 id="doc-type-tag" class="doc-type-title"></h1>
-  <div class="doc-banner">
+  
+  <div class="doc-banner" id="doc-banner">
     <div class="doc-banner-left">
       <div class="doc-equip-name" id="doc-equip-name"></div>
       <div class="doc-model-line" id="doc-model-line"></div>
@@ -371,7 +428,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
 
   <div id="doc-sections-wrapper"></div>
 
-  <div class="sig-block">
+  <div class="sig-block" id="sig-block">
     <div class="sig-field">
       <span class="sig-label">Name</span>
       <span class="sig-val" id="sig-name"></span>
@@ -396,7 +453,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
    STATE
 ═══════════════════════════════════════════ */
 let selectedModel   = null;
-let selectedDocType = null; // 'DOC' | 'DOP'
+let selectedDocType = null; // 'DOC' | 'DOP' | 'CE'
 
 /* ═══════════════════════════════════════════
    MODELS
@@ -427,7 +484,6 @@ const ATEX_COMMON = {
 const EMC_COMMON = { ref:'2014/30/EU', standards:`EN50130-4:2011\nEN61000-6-4:2007/A1:2011` };
 const atex = certNo => ({ ref:'2014/34/EU', ...ATEX_COMMON, certNo });
 
-/* CPR blocks return null (not shown in DoC) */
 const CPR_EMI = () => null;
 const CPR_VDS = () => null;
 
@@ -522,11 +578,21 @@ const DOC_FIELD_LABELS = {
 /* ═══════════════════════════════════════════
    DoP DATA
 ═══════════════════════════════════════════ */
+const DOP_VARIANTS = {
+  'FLS-IR3':       ['ASx0','ASx1-VdS','ASx3','ASx5','CSx0'],
+  'FLS-IR3-HD':    ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','ASx7','CSx0'],
+  'FLS-IR3-H2':    ['ASx0','ASx1','ASx3-VdS','ASx5','CSx0'],
+  'FLS-IR3-H2-HD': ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','CSx0'],
+  'FLS-UV-IR':     ['ASx0','ASx1-VdS','ASx5','CSx0'],
+  'FLS-UV-IR-HD':  ['ASx0','ASx1','ASx2','ASx5','CSx0'],
+  'FLS-UV-IR-F':   ['ASx0','ASx1','ASx5','CSx0'],
+  'FLS-UV-IR-F-HD':['ASx0','ASx1','ASx2','ASx5','CSx0'],
+};
+
 const CPR_EMI_91 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-140-(C-17/2025)' };
 const CPR_EMI_92 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-141-(C-17-2025)' };
 const CPR_EMI_93 = { standard:'EN 54-10:2002, EN 54-10:2002/A1:2005', nb:'ÉMI Építésügyi Minőségellenőrző Innovációs Nonprofit Kft.', nbNo:'1415', cert:'1415-CPR-142-(C-17/2025)' };
 
-// 
 const CPR_VDS_33 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21874' };
 const CPR_VDS_34 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21875' };
 const CPR_VDS_35 = { standard:'EN 54-10:2002 + A1:2005', nb:'VdS Schadenverhütung GmbH, Amsterdamer Str. 174, D-50735 Köln', nbNo:'0786', cert:'0786-CPR-21876' };
@@ -569,15 +635,45 @@ const DOP_DB = {
   }
 };
 
-const DOP_VARIANTS = {
-  'FLS-IR3':       ['ASx0','ASx1-VdS','ASx3','ASx5','CSx0'],
-  'FLS-IR3-HD':    ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','ASx7','CSx0'],
-  'FLS-IR3-H2':    ['ASx0','ASx1','ASx3-VdS','ASx5','CSx0'],
-  'FLS-IR3-H2-HD': ['ASx0','ASx1','ASx2','ASx3','ASx4','ASx5','CSx0'],
-  'FLS-UV-IR':     ['ASx0','ASx1-VdS','ASx5','CSx0'],
-  'FLS-UV-IR-HD':  ['ASx0','ASx1','ASx2','ASx5','CSx0'],
-  'FLS-UV-IR-F':   ['ASx0','ASx1','ASx5','CSx0'],
-  'FLS-UV-IR-F-HD':['ASx0','ASx1','ASx2','ASx5','CSx0'],
+/* ═══════════════════════════════════════════
+   CE LABEL DATA
+═══════════════════════════════════════════ */
+const CE_DB = {
+  "FLS-IR3": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F120V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F120V0020" },
+    "ASX1-VDS": { nb: "0876", year: "", cert: "G225033\nVdS 2543:2021-03", std: "EN 54-10:2002 + A1:2005", techDoc: "F120V0020" }
+  },
+  "FLS-IR3-HD": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F101V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F101V0020" }
+  },
+  "FLS-IR3-H2": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F150V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F150V0020" },
+    "ASX3-VDS": { nb: "0786", year: "", cert: "G225035\nVdS 2543:2021-03", std: "EN 54-10:2002 + A1:2005", techDoc: "F150V0020" }
+  },
+  "FLS-IR3-H2-HD": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F140V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-140-(C-17/2025)", std: "EN 54-10", techDoc: "F140V0020" }
+  },
+  "FLS-UV-IR": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-141-(C-17-2025)", std: "EN 54-10", techDoc: "F110V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F110V0020" },
+    "ASX1-VDS": { nb: "0876", year: "", cert: "G225034\nVdS 2543:2021-03", std: "EN 54-10:2002 + A1:2005", techDoc: "F110V0020" }
+  },
+  "FLS-UV-IR-HD": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F130V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-141-(C-17-2025)", std: "EN 54-10", techDoc: "F130V0020" }
+  },
+  "FLS-UV-IR-F": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F110V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F110V0020" }
+  },
+  "FLS-UV-IR-F-HD": {
+    "ASXX": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F130V0020" },
+    "CSX0": { nb: "1415", year: "19", cert: "1415-CPR-142-(C-17/2025)", std: "EN 54-10", techDoc: "F130V0020" }
+  }
 };
 
 
@@ -645,6 +741,7 @@ function selectModel(id) {
   document.getElementById('doctype-row').classList.add('enabled');
   document.getElementById('card-doc').classList.remove('selected');
   document.getElementById('card-dop').classList.remove('selected');
+  document.getElementById('card-ce').classList.remove('selected');
 
   // Reset step 3
   document.getElementById('var-row').classList.remove('enabled');
@@ -660,11 +757,20 @@ function selectDocType(type) {
 
   document.getElementById('card-doc').classList.toggle('selected', type === 'DOC');
   document.getElementById('card-dop').classList.toggle('selected', type === 'DOP');
+  document.getElementById('card-ce').classList.toggle('selected', type === 'CE');
   document.getElementById('sn2').className = 'step-num done';
   document.getElementById('sn3').className = 'step-num';
 
   // Build variant list
-  const variants = type === 'DOC' ? (DOC_VARIANTS[selectedModel] || []) : (DOP_VARIANTS[selectedModel] || []);
+  let variants = [];
+  if (type === 'DOC') {
+    variants = DOC_VARIANTS[selectedModel] || [];
+  } else if (type === 'DOP') {
+    variants = DOP_VARIANTS[selectedModel] || [];
+  } else if (type === 'CE') {
+    variants = DOC_VARIANTS[selectedModel] || [];
+  }
+
   const vSel = document.getElementById('sel-variant');
   vSel.innerHTML = '<option value="">— Select variant —</option>';
   variants.forEach(v => {
@@ -675,7 +781,6 @@ function selectDocType(type) {
   });
   vSel.disabled = false;
 
-  // Set grid columns
   const varRow = document.getElementById('var-row');
   varRow.className = 'var-row enabled cols-1';
 
@@ -694,8 +799,13 @@ function openDocument() {
   const variant  = document.getElementById('sel-variant').value;
   if (!variant || !selectedModel || !selectedDocType) return;
 
+  // Restore defaults for DOC/DOP
+  document.getElementById('doc-banner').style.display = 'flex';
+  document.getElementById('sig-block').style.display = 'flex';
+
   if (selectedDocType === 'DOC') renderDoC(selectedModel, variant);
-  else                           renderDoP(selectedModel, variant);
+  else if (selectedDocType === 'DOP') renderDoP(selectedModel, variant);
+  else renderCE(selectedModel, variant);
 
   showView('doc');
 }
@@ -707,7 +817,6 @@ function renderDoC(model, variant) {
   const rec = DOC_DB[model] && DOC_DB[model][variant];
   if (!rec) { alert('Document not found.'); return; }
 
-  // Header
   document.getElementById('doc-type-tag').textContent  = 'EU Declaration of Conformity';
   document.getElementById('doc-equip-name').textContent = rec.equip;
   document.getElementById('doc-model-line').textContent = `Model: ${rec.modelNo}  ·  Variant: ${variant.replace(/-VdS/i,'')}`;
@@ -715,7 +824,6 @@ function renderDoC(model, variant) {
   document.getElementById('sig-name').textContent  = rec.sig;
   document.getElementById('sig-date').textContent  = rec.date;
 
-  // Preamble section
   let html = `<div class="sections-wrapper"><div class="section-block"><div class="section-hd"><span class="section-hd-num"></span><span class="section-hd-title">Declaration</span></div>
   <div class="section-body" style="font-size:13px;color:var(--text-mid);line-height:1.7">
     Fire &amp; Gas Detection Technologies Inc. declares under our sole responsibility that our equipment or protective system conforms to the relevant safety and health related requirements of the appropriate EU directive(s) listed below.
@@ -723,7 +831,6 @@ function renderDoC(model, variant) {
     <strong style="color:var(--text)">Manufacturer:</strong> Fire &amp; Gas Detection Technologies Inc., 2570 E. Cerritos Ave, Anaheim, CA 92806, USA
   </div></div>`;
 
-  // Directives
   const BADGE = { ATEX:'badge-atex', MED:'badge-med', EMC:'badge-emc', CPR:'badge-cpr' };
   const DIR_NAME = { ATEX:'ATEX Directive', MED:'Marine Equipment Directive', EMC:'EMC Directive', CPR:'Construction Products Regulation (CPR)' };
   const DIR_ICON = { ATEX:`<img src="ATEX LOGO.svg" onerror="this.style.display='none'">`, MED:`<img src="DNV LOGO.svg" onerror="this.style.display='none'">` };
@@ -756,7 +863,6 @@ function renderDoC(model, variant) {
    RENDER DoP
 ═══════════════════════════════════════════ */
 function renderDoP(model, variant) {
-  // Normalise variant key for DB lookup
   let dbKey = variant.toUpperCase();
   if (dbKey.includes('-VDS')) { /* keep */ }
   else if (dbKey.startsWith('ASX')) dbKey = 'ASXX';
@@ -802,6 +908,46 @@ function renderDoP(model, variant) {
     <div class="section-block"><div class="section-hd"><span class="section-hd-num">6</span><span class="section-hd-title">Declared Performance</span></div>
     <div class="section-body" style="padding:0">${isUVIR ? perfTableUVIR() : perfTableIR3()}</div></div>
 
+  </div>`;
+
+  document.getElementById('doc-sections-wrapper').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
+   RENDER CE LABEL
+═══════════════════════════════════════════ */
+function renderCE(model, variant) {
+  let dbKey = variant.toUpperCase();
+  if (dbKey.includes('-VDS')) { /* keep */ }
+  else if (dbKey.startsWith('ASX')) dbKey = 'ASXX';
+  else if (dbKey.startsWith('CSX')) dbKey = 'CSX0';
+
+  const rec = CE_DB[model] && CE_DB[model][dbKey];
+  if (!rec) { alert('CE Label data not found for this combination.'); return; }
+
+  // Hide typical document headers/signatures for the pure label view
+  document.getElementById('doc-banner').style.display = 'none';
+  document.getElementById('sig-block').style.display = 'none';
+  document.getElementById('doc-type-tag').textContent = 'CE Mark / Compliance Label';
+
+  const displayVariant = variant.replace(/-VdS/i, '').toUpperCase();
+  const modelStr = `${model}-${displayVariant}`;
+
+  const html = `
+  <div class="ce-label-box">
+      <div class="ce-logo-container">
+        <img src="CE mark.jpg" alt="CE Mark" style="height: 85px; width: auto; margin-bottom: 5px;">
+        <div class="ce-nb">${rec.nb}</div>
+      </div>
+      <div class="ce-text-lines">
+        <div class="ce-line">Fire & Gas Detection Technologies Inc.<br>2570 E. Cerritos Ave, Anaheim, CA 92806, USA</div>
+        ${rec.year ? `<div class="ce-line ce-year">${rec.year}</div>` : ''}
+        <div class="ce-line ce-cert">${rec.cert.replace(/\n/g, '<br>')}</div>
+        <div class="ce-line ce-std">${rec.std}</div>
+        <div class="ce-line ce-desc">Flame Detectors – Point Detectors</div>
+        <div class="ce-line ce-model">${modelStr}</div>
+        <div class="ce-line ce-tech">Technical Data: see doc ${rec.techDoc} held by the manufacturer</div>
+      </div>
   </div>`;
 
   document.getElementById('doc-sections-wrapper').innerHTML = html;
