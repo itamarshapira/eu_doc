@@ -700,7 +700,8 @@ function perfTableIR3() {
     <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
     <tbody>
     <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low– Class 3<br>Med/High/Extreme– <br>Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
-    <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
+    <tr><td>Operational reliability</td><td>Pass</td><td>4.3, 4.4, 4.7–4.9</td></tr>
+    <tr><td>Operational reliability</td><td>Not applicable</td><td> 4.5, 4.6</td></tr>
     <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
     <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
     <tr><td>Durability; corrosion resistance</td><td>Pass</td><td>5.11</td></tr>
@@ -714,7 +715,8 @@ function perfTableUVIR() {
     <thead><tr><th>Essential Characteristic</th><th>Performance</th><th>Clause</th></tr></thead>
     <tbody>
     <tr><td>Nominal activation conditions / Sensitivity, Response delay and Performance under fire conditions</td><td>Low– 3<br>Med/High/Extreme– <br>Class 1</td><td>Pass · 4.2, 5.2–5.6</td></tr>
-    <tr><td>Operational reliability</td><td>Pass / Not applicable</td><td>4.3, 4.4, 4.6–4.9 / 4.5</td></tr>
+    <tr><td>Operational reliability</td><td>Pass</td><td>4.3, 4.4, 4.7–4.9</td></tr>
+    <tr><td>Operational reliability</td><td>Not applicable</td><td> 4.5, 4.6</td></tr>
     <tr><td>Durability; temperature resistance</td><td>Pass</td><td>5.7, 5.8</td></tr>
     <tr><td>Durability; humidity resistance</td><td>Pass</td><td>5.9, 5.10</td></tr>
     <tr><td>Durability; corrosion resistance</td><td>Pass</td><td>5.11</td></tr>
@@ -914,7 +916,14 @@ function renderDoP(model, variant) {
   document.getElementById('sig-name').textContent  = rec.sig;
   document.getElementById('sig-date').textContent  = rec.date;
 
-  const html = `<div class="sections-wrapper">
+ const html = `<div class="sections-wrapper">
+
+    <div class="section-block">
+      <div class="section-hd"><span class="section-hd-num"></span><span class="section-hd-title">Declaration</span></div>
+      <div class="section-body" style="font-size:13px;color:var(--text-mid);line-height:1.7">
+        The performance of the product identified above is in conformity with the set of declared performance/s. This declaration of performance is issued, in accordance with Regulation (EU) No 305/2011, under the sole responsibility of the manufacturer identified below.
+      </div>
+    </div>
 
     <div class="section-block"><div class="section-hd"><span class="section-hd-num">1</span><span class="section-hd-title">Intended Use</span></div>
     <div class="section-body">Fire safety</div></div>
