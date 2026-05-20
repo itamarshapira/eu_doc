@@ -126,13 +126,13 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 
 /* Doc type cards */
 .doctype-row {
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
+  display:grid; grid-template-columns: repeat(4, 1fr); gap:14px;
   opacity:.35; pointer-events:none; transition:.3s;
 }
 .doctype-row.enabled { opacity:1; pointer-events:all; }
 .doctype-card {
   background:var(--s2); border:1.5px solid var(--border); border-radius:10px;
-  padding:22px 20px; cursor:pointer; transition:.2s; position:relative; overflow:hidden;
+  padding:22px 18px; cursor:pointer; transition:.2s; position:relative; overflow:hidden;
 }
 .doctype-card::after {
   content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
@@ -142,10 +142,10 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 .doctype-card:hover { border-color:var(--amber); transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,0,0,.3); }
 .doctype-card:hover::after { transform:scaleX(1); }
 .doctype-card.selected { border-color:var(--amber); background:var(--s3); }
-.dc-icon { font-size:28px; margin-bottom:10px; }
-.dc-title { font-size:16px; font-weight:700; color:var(--text); margin-bottom:5px; }
+.dc-icon { font-size:26px; margin-bottom:10px; }
+.dc-title { font-size:14px; font-weight:700; color:var(--text); margin-bottom:5px; line-height:1.2; }
 .dc-abbr { font-family:var(--mono); font-size:11px; color:var(--amber); margin-bottom:6px; }
-.dc-sub { font-size:12px; color:var(--text-dim); line-height:1.5; }
+.dc-sub { font-size:11.5px; color:var(--text-dim); line-height:1.5; }
 
 /* Variant + rep selectors */
 .var-row {
@@ -159,7 +159,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 .sel-group select {
   background:var(--s1); border:1.5px solid var(--border2); color:var(--text);
   font-family:var(--mono); font-size:13px; padding:10px 36px 10px 14px; border-radius:7px;
-  appearance:none; cursor:pointer; outline:none; transition:.2s; width:100%;
+  appearance:none; cursor:pointer; outline:none; transition:.2s; width:100%; height: 41px;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234f5c75' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
   background-repeat:no-repeat; background-position: right 13px center;
 }
@@ -167,11 +167,11 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 .sel-group select:disabled { opacity:.35; cursor:not-allowed; }
 
 .view-btn {
-  display:none; margin-top:10px; width:100%;
+  display:none; width:100%;
   background:var(--amber); border:none; border-radius:7px;
-  padding:13px 20px; font-family:var(--sans); font-weight:700;
+  padding:0 20px; font-family:var(--sans); font-weight:700;
   font-size:14px; color:#000; cursor:pointer; transition:.2s;
-  letter-spacing:.02em;
+  letter-spacing:.02em; height: 41px;
 }
 .view-btn:hover { background:#fbbf24; transform:translateY(-1px); }
 .view-btn.show { display:block; }
@@ -293,24 +293,34 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
   gap: 8px;
   color: #fff;
 }
-.ce-nb {
-  font-size: 24px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  font-family: var(--sans);
-}
-.ce-text-lines {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  font-size: 15px;
-  line-height: 1.4;
-}
+.ce-nb { font-size: 24px; font-weight: 700; letter-spacing: 0.1em; font-family: var(--sans); }
+.ce-text-lines { display: flex; flex-direction: column; gap: 14px; font-size: 15px; line-height: 1.4; }
 .ce-line { color: var(--text); }
 .ce-cert { font-weight: 700; font-size: 17px; }
 .ce-std { font-weight: 600; color: var(--text-mid); }
 .ce-model { font-weight: 700; font-size: 17px; color: var(--amber); }
 .ce-tech { font-family: var(--mono); font-size: 12.5px; color: var(--text-dim); margin-top: 10px; }
+
+/* ═══════════════════════════════════════
+   LABELER STYLES
+═══════════════════════════════════════ */
+.labeler-container { display: flex; flex-direction: column; gap: 32px; }
+.labeler-detector-img { text-align: center; background: var(--s2); padding: 30px; border-radius: 12px; border: 1px solid var(--border); }
+.labeler-detector-img h3 { font-size: 16px; margin-bottom: 20px; color: var(--text); }
+.labeler-detector-img img { max-width: 450px; width: 100%; border-radius: 8px; margin-top: 10px; }
+
+/* Updated Vertical Summary List */
+.drawing-summary { margin: 0 auto 24px; background: rgba(255,255,255,0.02); padding: 18px 24px; border-radius: 8px; display: inline-block; border: 1px solid var(--border); text-align: left; }
+.drawing-summary-title { font-size: 11px; font-weight: 700; color: var(--text-mid); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+.drawing-summary ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; font-family: var(--mono); font-size: 13.5px; }
+.drawing-summary ul li { background: var(--s1); padding: 8px 16px; border-radius: 6px; border: 1px solid var(--border2); color: var(--amber); width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.drawing-summary ul li .ds-title { color: var(--text); font-family: var(--sans); font-weight: 600; font-size: 13px; }
+
+.labeler-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+.labeler-card { background: var(--s1); border: 1px solid var(--border); border-radius: 8px; padding: 18px; text-align: center; display:flex; flex-direction:column; justify-content:flex-start; }
+.labeler-card img { max-width: 100%; height: auto; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); margin: 0 auto; display: block; }
+.labeler-card-title { font-size: 13px; font-weight: 600; color: var(--amber); margin-bottom: 2px; text-transform: uppercase; letter-spacing:0.05em; }
+.labeler-card-drawing { font-family: var(--mono); font-size: 15px; color: var(--text-mid); margin-bottom: 20px; }
 
 /* ═══════════════════════════════════════
    PRINT
@@ -339,6 +349,13 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
   .ce-line { color: #000; }
   .ce-std, .ce-tech { color: #555; }
   .ce-model { color: #000; }
+
+  /* Labeler Print Adjustments */
+  .labeler-detector-img, .labeler-card { background: #fff !important; border: 1px solid #ccc; page-break-inside:avoid; break-inside:avoid; }
+  .labeler-detector-img h3 { color: #000; }
+  .drawing-summary { border-color: #ccc; }
+  .drawing-summary ul li { color: #333; border-color: #ccc; background: #eee; }
+  .drawing-summary ul li .ds-title { color: #000; }
 }
 @media (max-width: 768px) {
   .doctype-row { grid-template-columns: 1fr; }
@@ -396,6 +413,12 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
         <div class="dc-abbr">CE Mark</div>
         <div class="dc-sub">Generate compliance label details including NB numbers and Certifications.</div>
       </div>
+      <div class="doctype-card" id="card-labeler" onclick="selectDocType('LABELER')">
+        <div class="dc-icon">🖼️</div>
+        <div class="dc-title">Product Labels</div>
+        <div class="dc-abbr">LABELER</div>
+        <div class="dc-sub">View actual detector label designs and physical placement instructions.</div>
+      </div>
     </div>
   </div>
 
@@ -404,15 +427,17 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
       <div class="step-num locked" id="sn3">3</div>
       <span>Select Variant</span>
     </div>
-    <div class="var-row cols-1" id="var-row">
-      <div class="sel-group">
-        <label for="sel-variant">Variant</label>
-        <select id="sel-variant" disabled onchange="onSelChange()">
-          <option value="">— Select variant —</option>
-        </select>
+    <div style="display: flex; align-items: flex-end; gap: 15px;">
+      <div class="var-row cols-1" id="var-row" style="flex: 1;">
+        <div class="sel-group">
+          <label for="sel-variant">Variant</label>
+          <select id="sel-variant" disabled onchange="onSelChange()">
+            <option value="">— Select variant —</option>
+          </select>
+        </div>
       </div>
+      <button class="view-btn" id="view-btn" onclick="openDocument(false)" style="width: auto; margin: 0; height: 41px;">View Document →</button>
     </div>
-    <button class="view-btn" id="view-btn" onclick="openDocument(false)">View Document →</button>
   </div>
 </div>
 
@@ -470,7 +495,7 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
    STATE
 ═══════════════════════════════════════════ */
 let selectedModel   = null;
-let selectedDocType = null; // 'DOC' | 'DOP' | 'CE'
+let selectedDocType = null; // 'DOC' | 'DOP' | 'CE' | 'LABELER'
 
 /* ═══════════════════════════════════════════
    MODELS
@@ -693,6 +718,106 @@ const CE_DB = {
   }
 };
 
+/* ═══════════════════════════════════════════
+   LABELER DATA MAP
+═══════════════════════════════════════════ */
+const IMAGE_FILES = {
+  "F100M0870": "F100M0870.06.jpg",
+  "F101M0470": "F101M0470.11.jpg",
+  "F101M0480": "F101M0480.09.jpg",
+  "F101M0870": "F101M0870.01.jpg",
+  "F101M2300": "F101M2300.00.jpg",
+  "F101M2400": "F101M2400.00.jpg",
+  "F101M4470": "F101M4470.00.jpg",
+  "F110M0880": "F110M0880.02.jpg",
+  "F110M1250": "F110M1250.11.jpg",
+  "F110M1260": "F110M1260.07.jpg",
+  "F110M1350": "F110M1350.01.jpg",
+  "F110M2300": "F110M2300.00.jpg",
+  "F110M2400": "F110M2400.00.jpg",
+  "F120M0880": "F120M0880.01.jpg",
+  "F120M2300": "F120M2300.00.jpg",
+  "F120M2400": "F120M2400.00.jpg",
+  "F130M0870": "F130M0870.00.jpg",
+  "F130M2300": "F130M2300.00.jpg",
+  "F140M0870": "F140M0870.02.jpg",
+  "F140M2300": "F140M2300.00.jpg",
+  "F140M2400": "F140M2400.00.jpg",
+  "F150M0880": "F150M0880.02.jpg",
+  "F150M2300": "F150M2300.00.jpg",
+  "F150M2400": "F150M2400.00.jpg",
+  "F160M0880": "F160M0880.02.jpg",
+  "F160M2300": "F160M2300.00.jpg",
+  "F170M0870": "F170M0870.02.jpg",
+  "F170M2300": "F170M2300.00.jpg"
+};
+
+const LABEL_DB = {
+  "FLS-IR3": {
+    "ASx0": { front: "F120M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "tbt" },
+    "ASx1": { front: "F120M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F120M2300" },
+    "ASx3": { front: "F120M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F120M2400" },
+    "ASx5": { front: "F120M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F120M2400" },
+    "CSx0": { front: "F120M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" },
+    "CSxE": { front: "F120M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" }
+  },
+  "FLS-IR3-HD": {
+    "ASx0": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "tbt" },
+    "ASx1": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2300" },
+    "ASx2": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2300" },
+    "ASx3": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2400" },
+    "ASx4": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2400" },
+    "ASx5": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2400" },
+    "ASx7": { front: "F100M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F101M2400" },
+    "CSx0": { front: "F101M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" },
+    "CSxE": { front: "F101M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" }
+  },
+  "FLS-IR3-H2": {
+    "ASx0": { front: "F150M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "tbt" },
+    "ASx1": { front: "F150M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F150M2300" },
+    "ASx3": { front: "F150M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F150M2400" },
+    "ASx5": { front: "F150M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F150M2400" },
+    "CSx0": { front: "F150M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" },
+  },
+  "FLS-IR3-H2-HD": {
+    "ASx0": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "tbt" },
+    "ASx1": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F140M2300" },
+    "ASx2": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F140M2300" },
+    "ASx3": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F140M2400" },
+    "ASx4": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F140M2400" },
+    "ASx5": { front: "F140M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F140M2400" },
+    "CSx0": { front: "F140M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" },
+  },
+  "FLS-UV-IR": {
+    "ASx0": { front: "F110M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "tbt" },
+    "ASx1": { front: "F110M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F110M2300" },
+    "ASx5": { front: "F110M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F110M2400" },
+    "CSx0": { front: "F110M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" },
+    "CSxE": { front: "F110M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" }
+  },
+  "FLS-UV-IR-HD": {
+    "ASx0": { front: "F130M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "tbt" },
+    "ASx1": { front: "F130M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F130M2300" },
+    "ASx2": { front: "F130M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F130M2300" },
+    "ASx5": { front: "F130M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F130M2300" },
+    "CSx0": { front: "F130M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" },
+    "CSxE": { front: "F130M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" }
+  },
+  "FLS-UV-IR-F": {
+    "ASx0": { front: "F160M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "tbt" },
+    "ASx1": { front: "F160M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F160M2300" },
+    "ASx5": { front: "F160M0880", main_db_eb: "F110M1250", main_db: "F110M1260", utopia: "F160M2400" }, 
+    "CSx0": { front: "F160M0880", main_db_eb: "F110M1350", main_db: "N/A", utopia: "tbt" },
+  },
+  "FLS-UV-IR-F-HD": {
+    "ASx0": { front: "F170M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "tbt" },
+    "ASx1": { front: "F170M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F170M2300" },
+    "ASx2": { front: "F170M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F170M2300" },
+    "ASx5": { front: "F170M0870", main_db_eb: "F101M0470", main_db: "F101M0480", utopia: "F170M2300" },
+    "CSx0": { front: "F170M0870", main_db_eb: "F101M4470", main_db: "N/A", utopia: "tbt" },
+  }
+};
+
 
 /* Performance table HTML */
 function perfTableIR3() {
@@ -761,6 +886,7 @@ function selectModel(id) {
   document.getElementById('card-doc').classList.remove('selected');
   document.getElementById('card-dop').classList.remove('selected');
   document.getElementById('card-ce').classList.remove('selected');
+  document.getElementById('card-labeler').classList.remove('selected');
 
   // Reset step 3
   document.getElementById('var-row').classList.remove('enabled');
@@ -777,6 +903,8 @@ function selectDocType(type) {
   document.getElementById('card-doc').classList.toggle('selected', type === 'DOC');
   document.getElementById('card-dop').classList.toggle('selected', type === 'DOP');
   document.getElementById('card-ce').classList.toggle('selected', type === 'CE');
+  document.getElementById('card-labeler').classList.toggle('selected', type === 'LABELER');
+  
   document.getElementById('sn2').className = 'step-num done';
   document.getElementById('sn3').className = 'step-num';
 
@@ -784,10 +912,10 @@ function selectDocType(type) {
   let variants = [];
   if (type === 'DOC') {
     variants = DOC_VARIANTS[selectedModel] || [];
-  } else if (type === 'DOP') {
+  } else if (type === 'DOP' || type === 'CE') {
     variants = DOP_VARIANTS[selectedModel] || [];
-  } else if (type === 'CE') {
-    variants = DOP_VARIANTS[selectedModel] || []; // Use DOP variants list for CE logic too
+  } else if (type === 'LABELER') {
+    variants = DOC_VARIANTS[selectedModel] || []; // Uses largest set of variants
   }
 
   const vSel = document.getElementById('sel-variant');
@@ -820,25 +948,24 @@ function openDocument(fromView = false) {
   const viewSel = document.getElementById('doc-view-sel-variant');
 
   if (fromView) {
-    // If triggered from the view screen dropdown
     variant = viewSel.value;
-    homeSel.value = variant; // Sync the home dropdown
+    homeSel.value = variant; 
   } else {
-    // If triggered from the home screen "View Document" button
     variant = homeSel.value;
-    viewSel.innerHTML = homeSel.innerHTML; // Sync options to view dropdown
-    viewSel.value = variant; // Set the selected value
+    viewSel.innerHTML = homeSel.innerHTML;
+    viewSel.value = variant; 
   }
 
   if (!variant || !selectedModel || !selectedDocType) return;
 
-  // Restore defaults for DOC/DOP
+  // Restore defaults for standard docs
   document.getElementById('doc-banner').style.display = 'flex';
   document.getElementById('sig-block').style.display = 'flex';
 
   if (selectedDocType === 'DOC') renderDoC(selectedModel, variant);
   else if (selectedDocType === 'DOP') renderDoP(selectedModel, variant);
-  else renderCE(selectedModel, variant);
+  else if (selectedDocType === 'CE') renderCE(selectedModel, variant);
+  else if (selectedDocType === 'LABELER') renderLabeler(selectedModel, variant);
 
   if (!fromView) showView('doc');
 }
@@ -965,7 +1092,6 @@ function renderCE(model, variant) {
   const rec = CE_DB[model] && CE_DB[model][dbKey];
   if (!rec) { alert('CE Label data not found for this combination.'); return; }
 
-  // Hide typical document headers/signatures for the pure label view
   document.getElementById('doc-banner').style.display = 'none';
   document.getElementById('sig-block').style.display = 'none';
   document.getElementById('doc-type-tag').textContent = 'CE Mark / Compliance Label';
@@ -976,7 +1102,7 @@ function renderCE(model, variant) {
   const html = `
   <div class="ce-label-box">
       <div class="ce-logo-container">
-        <img src="CE mark.jpg" alt="CE Mark" style="height: 85px; width: auto; margin-bottom: 5px;">
+        <img src="CE mark.jpg" alt="CE Mark" style="height: 85px; width: auto; margin-bottom: 5px;" onerror="this.style.display='none'">
         <div class="ce-nb">${rec.nb}</div>
       </div>
       <div class="ce-text-lines">
@@ -994,14 +1120,98 @@ function renderCE(model, variant) {
 }
 
 /* ═══════════════════════════════════════════
+   RENDER LABELER (NEW)
+═══════════════════════════════════════════ */
+function renderLabeler(model, variant) {
+  document.getElementById('doc-banner').style.display = 'none';
+  document.getElementById('sig-block').style.display = 'none';
+  document.getElementById('doc-type-tag').textContent = 'Product Label Specifications';
+
+  let cleanVariant = variant.replace(/-VdS/i, ''); // Maps based on clean variant strings
+  const rec = LABEL_DB[model] && LABEL_DB[model][cleanVariant];
+  
+  if (!rec) {
+    document.getElementById('doc-sections-wrapper').innerHTML = `
+      <div class="ce-label-box" style="border-color:var(--amber); color:var(--amber);">
+         Label mappings for <strong>${model} / ${cleanVariant}</strong> have not yet been fully added to the script.<br>
+         Please refer to the CSV and update the <code>LABEL_DB</code> array in the HTML code.
+      </div>`;
+    return;
+  }
+
+  // Determine correct base detector picture based on 'HD' string
+  const isHD = model.toUpperCase().includes('-HD');
+  const detectorImgSrc = isHD ? 'HD detector.png' : 'nonHD detector.png';
+
+  // Set up the drawing pairs for the vertical list
+  const drawingPairs = [
+    { title: 'Main Label (db eb)', key: rec.main_db_eb },
+    { title: 'Main Label (db)', key: rec.main_db },
+    { title: 'Utopia Label', key: rec.utopia },
+    { title: 'Front Label', key: rec.front }
+  ];
+
+  // Extract valid drawings and map to HTML list items with titles
+  const validDrawings = drawingPairs
+    .filter(item => item.key && item.key !== 'N/A' && item.key !== 'tbt' && item.key.toLowerCase() !== 'na')
+    .map(item => {
+      const actualFile = IMAGE_FILES[item.key] || `${item.key}.jpg`;
+      const fullDrawingNo = actualFile.replace('.jpg', '');
+      return `<li><span class="ds-title">${item.title}:</span> <span>${fullDrawingNo}</span></li>`;
+    });
+
+  let summaryHtml = '';
+  if (validDrawings.length > 0) {
+    summaryHtml = `
+      <div class="drawing-summary">
+         <div class="drawing-summary-title">Required Drawings</div>
+         <ul>
+           ${validDrawings.join('')}
+         </ul>
+      </div>`;
+  }
+
+  // Helper to get image HTML card
+  function getLabelCard(title, labelKey) {
+    if (!labelKey || labelKey === 'N/A' || labelKey === 'tbt' || labelKey.toLowerCase() === 'na') return '';
+    const actualFile = IMAGE_FILES[labelKey] || `${labelKey}.jpg`;
+    const fullDrawingNo = actualFile.replace('.jpg', '');
+    return `
+      <div class="labeler-card">
+        <div class="labeler-card-title">${title}</div>
+        <div class="labeler-card-drawing">Drawing: ${fullDrawingNo}</div>
+        <img src="${actualFile}" alt="${title}" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span style=color:red;font-size:11px>Image Missing: ${actualFile}</span>');">
+      </div>`;
+  }
+
+  const html = `
+    <div class="labeler-container">
+       <div class="labeler-grid">
+         ${getLabelCard('Main Label (db eb)', rec.main_db_eb)}
+         ${getLabelCard('Main Label (db)', rec.main_db)}
+         ${getLabelCard('Utopia Label', rec.utopia)}
+         ${getLabelCard('Front Label', rec.front)}
+       </div>
+
+       <div class="labeler-detector-img">
+         <h3>Detector Placement Reference</h3>
+         <div style="display: flex; align-items: flex-start; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 10px;">
+           ${summaryHtml.replace('class="drawing-summary"', 'class="drawing-summary" style="margin: 0;"')}
+           <img src="${detectorImgSrc}" alt="${isHD ? 'HD Detector' : 'Standard Detector'}" style="margin: 0;" onerror="this.style.display='none'; this.insertAdjacentHTML('afterend', '<span style=color:red;font-size:11px>Image Missing: ${detectorImgSrc}</span>');">
+         </div>
+       </div>
+  `;
+
+  document.getElementById('doc-sections-wrapper').innerHTML = html;
+}
+
+/* ═══════════════════════════════════════════
    VIEW MANAGEMENT
 ═══════════════════════════════════════════ */
 function showView(v) {
   document.getElementById('view-home').classList.toggle('active', v === 'home');
   document.getElementById('view-doc').classList.toggle('active', v === 'doc');
   document.getElementById('hdr-back').classList.toggle('show', v === 'doc');
-  if (v === 'home') {
-  }
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
