@@ -126,8 +126,7 @@ body { background:var(--bg); color:var(--text); font-family:var(--sans); font-si
 
 /* Doc type cards */
 .doctype-row {
-  /* Changed back to 3 columns temporarily while LABELER is hidden */
-  display:grid; grid-template-columns: repeat(3, 1fr); gap:14px;
+  display:grid; grid-template-columns: repeat(4, 1fr); gap:14px;
   opacity:.35; pointer-events:none; transition:.3s;
 }
 .doctype-row.enabled { opacity:1; pointer-events:all; }
@@ -414,7 +413,13 @@ tr:nth-child(even) td { background:rgba(255,255,255,.015); }
         <div class="dc-abbr">CE Mark</div>
         <div class="dc-sub">Generate compliance label details including NB numbers and Certifications.</div>
       </div>
+      <div class="doctype-card" id="card-labeler" onclick="selectDocType('LABELER')">
+        <div class="dc-icon">🖼️</div>
+        <div class="dc-title">Product Labels</div>
+        <div class="dc-abbr">LABELER</div>
+        <div class="dc-sub">View actual detector label designs and physical placement instructions.</div>
       </div>
+    </div>
   </div>
 
   <div class="sel-step">
@@ -881,9 +886,7 @@ function selectModel(id) {
   document.getElementById('card-doc').classList.remove('selected');
   document.getElementById('card-dop').classList.remove('selected');
   document.getElementById('card-ce').classList.remove('selected');
-  
-  // NOTE: If you uncomment the labeler card in the HTML, you should uncomment the line below.
-  // document.getElementById('card-labeler').classList.remove('selected');
+  document.getElementById('card-labeler').classList.remove('selected');
 
   // Reset step 3
   document.getElementById('var-row').classList.remove('enabled');
@@ -900,9 +903,7 @@ function selectDocType(type) {
   document.getElementById('card-doc').classList.toggle('selected', type === 'DOC');
   document.getElementById('card-dop').classList.toggle('selected', type === 'DOP');
   document.getElementById('card-ce').classList.toggle('selected', type === 'CE');
-  
-  // NOTE: If you uncomment the labeler card in the HTML, you should uncomment the line below.
-  // document.getElementById('card-labeler').classList.toggle('selected', type === 'LABELER');
+  document.getElementById('card-labeler').classList.toggle('selected', type === 'LABELER');
   
   document.getElementById('sn2').className = 'step-num done';
   document.getElementById('sn3').className = 'step-num';
